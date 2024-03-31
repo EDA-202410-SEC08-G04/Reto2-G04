@@ -1,4 +1,4 @@
-﻿"""
+﻿"""data_size(data_structs)
  * Copyright 2020, Departamento de sistemas y Computación,
  * Universidad de Los Andes
  *
@@ -26,6 +26,7 @@
 
 
 import config as cf
+import time 
 from DISClib.ADT import list as lt
 from DISClib.ADT import stack as st
 from DISClib.ADT import queue as qu
@@ -36,6 +37,7 @@ from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import selectionsort as se
 from DISClib.Algorithms.Sorting import mergesort as merg
 from DISClib.Algorithms.Sorting import quicksort as quk
+
 assert cf
 
 """
@@ -52,29 +54,67 @@ def new_data_structs():
     manera vacía para posteriormente almacenar la información.
     """
     #TODO: Inicializar las estructuras de datos
-    pass
+    
+    data_structs = {'jobs': None,
+            'skills': None,
+            'employments_types': None,
+            'multilocations': None,
+            }
 
+    data_structs['jobs'] = lt.newList(datastructure='ARRAY_LIST')
+    data_structs['skills'] = lt.newList('ARRAY_LIST')
+    data_structs['employments_types'] = lt.newList('ARRAY_LIST')
+    data_structs['multilocations'] = lt.newList('ARRAY_LIST')
+    
+    tabla_hash_id= mp.newMap(203563, maptype='PROBING', loadfactor=0.1)
+    #tabla_hash_id_skills= mp.newMap(#, maptype='CHAINING', loadfactor=0.5)
+    #tabla_hash_id_employmentstypes= mp.newMap(#, maptype='CHAINING', loadfactor=0.5)
+    #tabla_hash_id_multilocations = mp.newMap(#, maptype='CHAINING', loadfactor=0.5)
+    return data_structs, tabla_hash_id
 
 # Funciones para agregar informacion al modelo
 
-def add_data(data_structs, data):
+def add_job(data_structs, tabla_hash_id, job):
     """
     Función para agregar nuevos elementos a la lista
     """
     #TODO: Crear la función para agregar elementos a una lista
-    pass
+    id = job["id"]
+    mp.put(tabla_hash_id, id, job)
+    
+#def add_skill(data_structs, skill):
+    """
+    Función para agregar nuevos elementos a la lista
+    """
+    #TODO: Crear la función para agregar elementos a una lista
+    #id = skill["id"]
+    
+    
+#def add_multilocations(data_structs, multilocations):
+    """
+    Función para agregar nuevos elementos a la lista
+    """
+    #TODO: Crear la función para agregar elementos a una lista
+    #id = multilocations["id"]
 
-
+#def add_employments_types(data_structs,  employments_types):
+    """
+    Función para agregar nuevos elementos a la lista
+    """
+    #TODO: Crear la función para agregar elementos a una lista
+    
+    #id = employments_types["id"]
+ 
 # Funciones para creacion de datos
 
-def new_data(id, info):
+def new_data(id, info, i):
     """
     Crea una nueva estructura para modelar los datos
     """
-    #TODO: Crear la función para estructurar los datos
-    pass
-
-
+    #TODO: Crear la función para estructurar los datos. 
+    # Creación tabla de hash para jobs
+    
+    
 # Funciones de consulta
 
 def get_data(data_structs, id):
@@ -90,7 +130,10 @@ def data_size(data_structs):
     Retorna el tamaño de la lista de datos
     """
     #TODO: Crear la función para obtener el tamaño de una lista
-    pass
+    jobs=data_structs["jobs"]
+    jobsListSize= lt.size(jobs)
+    return jobsListSize
+    
 
 
 def req_1(data_structs):

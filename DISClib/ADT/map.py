@@ -28,6 +28,12 @@
 import config
 import importlib
 assert config
+from DISClib.ADT import list as lt
+from DISClib.ADT import stack as st
+from DISClib.ADT import queue as qu
+from DISClib.ADT import map as mp
+from DISClib.DataStructures import mapentry as me
+
 
 """
   Este módulo implementa el tipo abstracto de datos

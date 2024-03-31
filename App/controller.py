@@ -36,18 +36,56 @@ def new_controller():
     Crea una instancia del modelo
     """
     #TODO: Llamar la función del modelo que crea las estructuras de datos
-    pass
+    control = {
+        'model': None
+    }
+    control['model'],tabla_hash_id = model.new_data_structs()
+    return control,tabla_hash_id
 
 
 # Funciones para la carga de datos
 
-def load_data(control, filename):
+def load_data(tabla_hash_id,control, filename_jobs, filename_skills, filename_multilocations, filename_employments_types):
     """
     Carga los datos del reto
     """
     # TODO: Realizar la carga de datos
-    pass
+    
+    tiempo_inicial = get_time()
+    memoria = True
+    if memoria: 
+        tracemalloc.start()
+        memoria_inicial = get_memory()
+    #print (memoria_inicial, "memoria inicial")
+    time.sleep(3)
+    jobsfile = cf.data_dir + 'data/' + filename_jobs
+    skillsfile = cf.data_dir +'data/' + filename_skills
+    multilocationsfile= cf.data_dir +'data/' + filename_multilocations
+    employments_typesfile= cf.data_dir +'data/' + filename_employments_types
+    
+    input_filejob = csv.DictReader(open(jobsfile, encoding='utf-8'),delimiter=";")
+    input_fileskill = csv.DictReader(open(skillsfile, encoding='utf-8'),delimiter=";")
+    input_filemultilocations = csv.DictReader(open(multilocationsfile, encoding='utf-8'),delimiter=";")
+    input_fileemployments_types = csv.DictReader(open(employments_typesfile, encoding='utf-8'),delimiter=";")
+    
+    for job in input_filejob:
+        model.add_job(control['model'], tabla_hash_id,job) 
+        
+    tiempo_final = get_time()
+    tiempo_total = delta_time(tiempo_inicial, tiempo_final)
+    if memoria:
+        memoria_final = get_memory()
+        tracemalloc.stop()
+        memoria_total= delta_memory(memoria_final, memoria_inicial)
 
+    return tabla_hash_id, tiempo_total, memoria_total
+    #for skill in input_fileskill:
+        #model.add_skill(control['model'], skill)
+    #for multilocations in input_filemultilocations:
+        #model.add_multilocations(control['model'], multilocations)
+    #for employments_types in input_fileemployments_types:
+        #model.add_employments_types(control['model'], employments_types)
+    
 
 # Funciones de ordenamiento
 

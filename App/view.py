@@ -31,6 +31,7 @@ from DISClib.DataStructures import mapentry as me
 assert cf
 from tabulate import tabulate
 import traceback
+import time
 
 """
 La vista se encarga de la interacción con el usuario
@@ -45,7 +46,8 @@ def new_controller():
         Se crea una instancia del controlador
     """
     #TODO: Llamar la función del controlador donde se crean las estructuras de datos
-    pass
+    control,tabla_hash_id = controller.new_controller()
+    return control,tabla_hash_id
 
 
 def print_menu():
@@ -62,12 +64,14 @@ def print_menu():
     print("0- Salir")
 
 
-def load_data(control):
+def load_data(control, tamaño_archivo,tabla_hash_id):
     """
     Carga los datos
     """
     #TODO: Realizar la carga de datos
-    pass
+    
+    data, tiempo, memoria =controller.load_data(tabla_hash_id,control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-employments_types.csv'), (tamaño_archivo + '-multilocations.csv'))
+    return data, tiempo, memoria
 
 
 def print_data(control, id):
@@ -142,7 +146,7 @@ def print_req_8(control):
 
 
 # Se crea el controlador asociado a la vista
-control = new_controller()
+#control = new_controller()
 
 # main del reto
 if __name__ == "__main__":
@@ -150,13 +154,19 @@ if __name__ == "__main__":
     Menu principal
     """
     working = True
+    control,tabla_hash_id = new_controller()
     #ciclo del menu
     while working:
         print_menu()
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs) == 1:
+            inputs_2= input("Escriba el tamaño de los archivos a cargar(small, medium, large, 10-por, etc)")
             print("Cargando información de los archivos ....\n")
-            data = load_data(control)
+            carga, tiempo, memoria = load_data(control, inputs_2,tabla_hash_id)
+            #print(carga)
+            print ("memoria total: ", memoria)
+            print ("tiempo total: ", tiempo)
+            
         elif int(inputs) == 2:
             print_req_1(control)
 
