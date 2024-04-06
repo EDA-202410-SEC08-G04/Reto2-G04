@@ -50,7 +50,6 @@ def load_jobs(control, filename_jobs):
     input_filejob = csv.DictReader(open(jobsfile, encoding='utf-8'),delimiter=";")
     for job in input_filejob:
         model.add_job(control['model'],job)
-    print (control)
     return control
         
 def load_skills(control, filename_skills):
