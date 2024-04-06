@@ -167,8 +167,7 @@ if __name__ == "__main__":
             print("Cargando información de los archivos ....\n")
             #carga, tiempo, memoria = load_data(control, inputs_2,data_structs)
             carga = load_data(control, inputs_2)
-            ofertas = controller.load_jobs(control, inputs_2)
-            print(ofertas)
+          
             #print ("memoria total: ", memoria)
             #print ("tiempo total: ", tiempo)
             

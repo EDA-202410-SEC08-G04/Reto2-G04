@@ -45,15 +45,13 @@ def new_controller():
 
 # Funciones para la carga de datos
 def load_jobs(control, filename_jobs):
-    print (filename_jobs, "hola")
-    jobsfile = cf.data_dir + 'data/' + filename_jobs
-    print ("aaa",jobsfile)
-    input_filejob = csv.DictReader(open(jobsfile, encoding='utf-8'),delimiter=";")
     
-    print ("bbb",input_filejob,"xxx",jobsfile)
+    jobsfile = cf.data_dir + 'data/' + filename_jobs
+    input_filejob = csv.DictReader(open(jobsfile, encoding='utf-8'),delimiter=";")
     for job in input_filejob:
-        model.add_job(control['model'],job) 
-    return control, jobsfile
+        model.add_job(control['model'],job)
+    print (control)
+    return control
         
 def load_skills(control, filename_skills):
     skillsfile = cf.data_dir +'data/' + filename_skills
@@ -88,8 +86,8 @@ def load_data(control, filename_jobs, filename_skills, filename_multilocations, 
         tracemalloc.start()
         memoria_inicial = get_memory()
     
-    num_ofertas,jobsfile = load_jobs(control, filename_jobs)
-    print ("dddd",jobsfile)
+    num_ofertas= load_jobs(control, filename_jobs)
+
     num_skills = load_skills(control, filename_skills)
     num_multilocations = load_multilocations(control, filename_multilocations)
     num_employments_types = load_employments_type(control, filename_employments_types)
