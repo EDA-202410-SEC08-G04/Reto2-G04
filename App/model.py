@@ -69,10 +69,10 @@ def new_data_structs():
     data_structs['employments_types'] = lt.newList(datastructure='ARRAY_LIST')
     data_structs['multilocations'] = lt.newList(datastructure='ARRAY_LIST')
     
-    data_structs["id_jobs"]= mp.newMap(203563, maptype='PROBING', loadfactor=0.5)
+    data_structs["id_jobs"]= mp.newMap(20352, maptype='PROBING', loadfactor=0.5)
     data_structs["id_skills"]= mp.newMap(577162, maptype='PROBING', loadfactor=0.5)
     data_structs["id_employments"]= mp.newMap(259837, maptype='PROBING', loadfactor=0.5)
-    data_structs["id_multilocations"] = mp.newMap(244937, maptype='CHAINING', loadfactor=0.5)
+    data_structs["id_multilocations"] = mp.newMap(244937, maptype='PROBING', loadfactor=0.5)
     return data_structs
 
 # Funciones para agregar informacion al modelo
@@ -84,6 +84,8 @@ def add_job(data_structs, job):
     #TODO: Crear la función para agregar elementos a una lista
     id = job["id"]
     mp.put(data_structs["id_jobs"], id, job)
+    
+
     
 def add_skill(data_structs, skill):
     """
@@ -138,11 +140,10 @@ def data_size(data_structs):
     Retorna el tamaño de la lista de datos
     """
     #TODO: Crear la función para obtener el tamaño de una lista
-    jobs=data_structs["jobs"]
-    jobsListSize= lt.size(jobs)
+    
+    jobsListSize= mp.size(data_structs["id_jobs"])
     return jobsListSize
     
-
 
 def req_1(data_structs):
     """

@@ -74,6 +74,7 @@ def load_data(control, tamaño_archivo):
     #return data, tiempo, memoria
     
     controller.load_data(control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-employments_types.csv'), (tamaño_archivo + '-multilocations.csv'))
+    
     #return data,jobsfile
 
 
@@ -167,7 +168,10 @@ if __name__ == "__main__":
             print("Cargando información de los archivos ....\n")
             #carga, tiempo, memoria = load_data(control, inputs_2,data_structs)
             carga = load_data(control, inputs_2)
-            print (control)
+            datastructs = control["model"]
+            tamaño = controller.cantidad_ofertas(datastructs)
+        
+            print ("El total de ofertas publicadas cargadas es: ", tamaño)
           
             #print ("memoria total: ", memoria)
             #print ("tiempo total: ", tiempo)
