@@ -46,8 +46,8 @@ def new_controller():
         Se crea una instancia del controlador
     """
     #TODO: Llamar la función del controlador donde se crean las estructuras de datos
-    control,tabla_hash_id = controller.new_controller()
-    return control,tabla_hash_id
+    control = controller.new_controller()
+    return control
 
 
 def print_menu():
@@ -64,14 +64,17 @@ def print_menu():
     print("0- Salir")
 
 
-def load_data(control, tamaño_archivo,tabla_hash_id):
+def load_data(control, tamaño_archivo):
     """
     Carga los datos
     """
     #TODO: Realizar la carga de datos
     
-    data, tiempo, memoria =controller.load_data(tabla_hash_id,control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-employments_types.csv'), (tamaño_archivo + '-multilocations.csv'))
-    return data, tiempo, memoria
+    #data, tiempo, memoria =controller.load_data(data_structs,control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-employments_types.csv'), (tamaño_archivo + '-multilocations.csv'))
+    #return data, tiempo, memoria
+    
+    data = controller.load_data(control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-employments_types.csv'), (tamaño_archivo + '-multilocations.csv'))
+    return data
 
 
 def print_data(control, id):
@@ -154,7 +157,7 @@ if __name__ == "__main__":
     Menu principal
     """
     working = True
-    control,tabla_hash_id = new_controller()
+    control= new_controller()
     #ciclo del menu
     while working:
         print_menu()
@@ -162,10 +165,11 @@ if __name__ == "__main__":
         if int(inputs) == 1:
             inputs_2= input("Escriba el tamaño de los archivos a cargar(small, medium, large, 10-por, etc)")
             print("Cargando información de los archivos ....\n")
-            carga, tiempo, memoria = load_data(control, inputs_2,tabla_hash_id)
-            #print(carga)
-            print ("memoria total: ", memoria)
-            print ("tiempo total: ", tiempo)
+            #carga, tiempo, memoria = load_data(control, inputs_2,data_structs)
+            carga = load_data(control, inputs_2)
+            print(carga)
+            #print ("memoria total: ", memoria)
+            #print ("tiempo total: ", tiempo)
             
         elif int(inputs) == 2:
             print_req_1(control)

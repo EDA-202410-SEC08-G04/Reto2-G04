@@ -39,13 +39,13 @@ def new_controller():
     control = {
         'model': None
     }
-    control['model'],tabla_hash_id = model.new_data_structs()
-    return control,tabla_hash_id
+    control['model'] = model.new_data_structs()
+    return control
 
 
 # Funciones para la carga de datos
 
-def load_data(tabla_hash_id,control, filename_jobs, filename_skills, filename_multilocations, filename_employments_types):
+def load_data(control, filename_jobs, filename_skills, filename_multilocations, filename_employments_types):
     """
     Carga los datos del reto
     """
@@ -56,8 +56,7 @@ def load_data(tabla_hash_id,control, filename_jobs, filename_skills, filename_mu
     if memoria: 
         tracemalloc.start()
         memoria_inicial = get_memory()
-    #print (memoria_inicial, "memoria inicial")
-    time.sleep(3)
+   
     jobsfile = cf.data_dir + 'data/' + filename_jobs
     skillsfile = cf.data_dir +'data/' + filename_skills
     multilocationsfile= cf.data_dir +'data/' + filename_multilocations
@@ -69,23 +68,24 @@ def load_data(tabla_hash_id,control, filename_jobs, filename_skills, filename_mu
     input_fileemployments_types = csv.DictReader(open(employments_typesfile, encoding='utf-8'),delimiter=";")
     
     for job in input_filejob:
-        model.add_job(control['model'], tabla_hash_id,job) 
-        
+        model.add_job(control['model'],job) 
+    
+    for skill in input_fileskill:
+        model.add_skill(control['model'], skill)
+    for multilocations in input_filemultilocations:
+        model.add_multilocations(control['model'], multilocations)
+    for employments_types in input_fileemployments_types:
+        model.add_employments_types(control['model'], employments_types)
+    
     tiempo_final = get_time()
-    tiempo_total = delta_time(tiempo_inicial, tiempo_final)
+    tiempo_total = delta_time(tiempo_inicial, tiempo_final)   
     if memoria:
         memoria_final = get_memory()
         tracemalloc.stop()
         memoria_total= delta_memory(memoria_final, memoria_inicial)
-
-    return tabla_hash_id, tiempo_total, memoria_total
-    #for skill in input_fileskill:
-        #model.add_skill(control['model'], skill)
-    #for multilocations in input_filemultilocations:
-        #model.add_multilocations(control['model'], multilocations)
-    #for employments_types in input_fileemployments_types:
-        #model.add_employments_types(control['model'], employments_types)
     
+    return control   
+    #return data_structs, tiempo_total, memoria_total
 
 # Funciones de ordenamiento
 

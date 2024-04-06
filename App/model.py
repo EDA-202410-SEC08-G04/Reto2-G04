@@ -59,60 +59,66 @@ def new_data_structs():
             'skills': None,
             'employments_types': None,
             'multilocations': None,
-            }
+            'id_jobs': None,
+            'id_skills': None, 
+            'id_employments': None,
+            'id_multilocations': None}
 
     data_structs['jobs'] = lt.newList(datastructure='ARRAY_LIST')
-    data_structs['skills'] = lt.newList('ARRAY_LIST')
-    data_structs['employments_types'] = lt.newList('ARRAY_LIST')
-    data_structs['multilocations'] = lt.newList('ARRAY_LIST')
+    data_structs['skills'] = lt.newList(datastructure='ARRAY_LIST')
+    data_structs['employments_types'] = lt.newList(datastructure='ARRAY_LIST')
+    data_structs['multilocations'] = lt.newList(datastructure='ARRAY_LIST')
     
-    tabla_hash_id= mp.newMap(203563, maptype='PROBING', loadfactor=0.1)
-    #tabla_hash_id_skills= mp.newMap(#, maptype='CHAINING', loadfactor=0.5)
-    #tabla_hash_id_employmentstypes= mp.newMap(#, maptype='CHAINING', loadfactor=0.5)
-    #tabla_hash_id_multilocations = mp.newMap(#, maptype='CHAINING', loadfactor=0.5)
-    return data_structs, tabla_hash_id
+    data_structs["id_jobs"]= mp.newMap(203563, maptype='PROBING', loadfactor=0.5)
+    data_structs["id_skills"]= mp.newMap(577162, maptype='PROBING', loadfactor=0.5)
+    data_structs["id_employments"]= mp.newMap(259837, maptype='PROBING', loadfactor=0.5)
+    data_structs["id_multilocations"] = mp.newMap(244937, maptype='CHAINING', loadfactor=0.5)
+    return data_structs
 
 # Funciones para agregar informacion al modelo
 
-def add_job(data_structs, tabla_hash_id, job):
+def add_job(data_structs, job):
     """
     Función para agregar nuevos elementos a la lista
     """
     #TODO: Crear la función para agregar elementos a una lista
     id = job["id"]
-    mp.put(tabla_hash_id, id, job)
+    mp.put(data_structs["id_jobs"], id, job)
     
-#def add_skill(data_structs, skill):
+def add_skill(data_structs, skill):
     """
     Función para agregar nuevos elementos a la lista
     """
     #TODO: Crear la función para agregar elementos a una lista
-    #id = skill["id"]
+    id = skill["id"]
+    mp.put(data_structs["id_skills"], id, skill)
     
     
-#def add_multilocations(data_structs, multilocations):
+def add_multilocations(data_structs, multilocations):
     """
     Función para agregar nuevos elementos a la lista
     """
     #TODO: Crear la función para agregar elementos a una lista
-    #id = multilocations["id"]
+    id = multilocations["id"]
+    mp.put(data_structs["id_multilocations"], id, multilocations)
 
-#def add_employments_types(data_structs,  employments_types):
+def add_employments_types(data_structs,  employments_types):
     """
     Función para agregar nuevos elementos a la lista
     """
     #TODO: Crear la función para agregar elementos a una lista
     
-    #id = employments_types["id"]
+    id = employments_types["id"]
+    mp.put(data_structs["id_employments"], id, employments_types)
  
 # Funciones para creacion de datos
 
-def new_data(id, info, i):
+def new_data(id, info):
     """
     Crea una nueva estructura para modelar los datos
     """
     #TODO: Crear la función para estructurar los datos. 
-    # Creación tabla de hash para jobs
+    
     
     
 # Funciones de consulta
