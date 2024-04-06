@@ -73,8 +73,8 @@ def load_data(control, tamaño_archivo):
     #data, tiempo, memoria =controller.load_data(data_structs,control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-employments_types.csv'), (tamaño_archivo + '-multilocations.csv'))
     #return data, tiempo, memoria
     
-    data = controller.load_data(control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-employments_types.csv'), (tamaño_archivo + '-multilocations.csv'))
-    return data
+    controller.load_data(control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-employments_types.csv'), (tamaño_archivo + '-multilocations.csv'))
+    #return data,jobsfile
 
 
 def print_data(control, id):
@@ -167,7 +167,8 @@ if __name__ == "__main__":
             print("Cargando información de los archivos ....\n")
             #carga, tiempo, memoria = load_data(control, inputs_2,data_structs)
             carga = load_data(control, inputs_2)
-            print(carga)
+            ofertas = controller.load_jobs(control, inputs_2)
+            print(ofertas)
             #print ("memoria total: ", memoria)
             #print ("tiempo total: ", tiempo)
             

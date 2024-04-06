@@ -110,7 +110,9 @@ def add_employments_types(data_structs,  employments_types):
     
     id = employments_types["id"]
     mp.put(data_structs["id_employments"], id, employments_types)
- 
+
+# Función ordenamiento carga de datos de ofertas
+
 # Funciones para creacion de datos
 
 def new_data(id, info):
