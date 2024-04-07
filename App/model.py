@@ -143,13 +143,18 @@ def data_size(data_structs):
     return jobsListSize
     
 
-
+#job, num_ofertas_, experiencia, id_pais
 def req_1(data_structs):
+    
     """
     Función que soluciona el requerimiento 1
     """
     # TODO: Realizar el requerimiento 1
-    pass
+    id_jobs=data_structs["id_jobs"]
+   # list_id_jobs= mp.valueSet(id_jobs)
+    return id_jobs
+    
+
 
 
 def req_2(data_structs):
