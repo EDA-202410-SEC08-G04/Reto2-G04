@@ -172,19 +172,15 @@ if __name__ == "__main__":
             tamaño = controller.cantidad_ofertas(datastructs)
             print ("El total de ofertas publicadas cargadas es: ", tamaño)
             orden = controller.ofertas_ordenadas(datastructs)
+            
             # imprime las primeras 3 ofertas y las 3 ultimas ofertas
             tres_p_u = []
-            count = 0
-            #print("PRIMERAS  3:")
-            for i in range(0, tamaño):
-                if count < 3:
-                    elemento = lt.getElement(orden, i)
-                    tres_p_u.append(elemento)
-                    count += 1
-            i == tamaño -3   
-            #print("ULTIMAS 3:")      
-            for i in  range(i,tamaño+1):
-                #print ("Registro Nro:",i)
+            for i in range(1, 4):
+                elemento = lt.getElement(orden, i)
+                tres_p_u.append(elemento)
+                
+            n = tamaño -2     
+            for i in  range(n,tamaño+1):
                 elemento = lt.getElement(orden, i)
                 tres_p_u.append(elemento)
                 
