@@ -50,15 +50,17 @@ def load_jobs(control, filename_jobs):
     input_filejob = csv.DictReader(open(jobsfile, encoding='utf-8'),delimiter=";")
     for job in input_filejob:
         model.add_job(control['model'],job)
-       
-    #data_structs = control["model"]
-    #print ("xx",data_structs)
-    #cantidad_ofertas = model.data_size(data_structs)
-    #print ("cantidad de ofertas:",cantidad_ofertas)
+        model.carga_lista_fechas(control['model'], job)
+   
     return control
+# Funcion cantidad ofertas publicadas de la carga de datos
 def cantidad_ofertas(datastructs):
     tamaño = model.data_size(datastructs)
     return tamaño
+# Función ordenamiento por fecha de mayor a menor de las ofertas publicadas
+def ofertas_ordenadas(datastructs):
+    fechas_ordenadas = model.ofertas_ordenadas(datastructs["jobs"])
+    return fechas_ordenadas
     
 def load_skills(control, filename_skills):
     skillsfile = cf.data_dir +'data/' + filename_skills

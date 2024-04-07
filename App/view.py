@@ -170,9 +170,38 @@ if __name__ == "__main__":
             carga = load_data(control, inputs_2)
             datastructs = control["model"]
             tamaño = controller.cantidad_ofertas(datastructs)
-        
             print ("El total de ofertas publicadas cargadas es: ", tamaño)
-          
+            orden = controller.ofertas_ordenadas(datastructs)
+            # imprime las primeras 3 ofertas y las 3 ultimas ofertas
+            tres_p_u = []
+            count = 0
+            #print("PRIMERAS  3:")
+            for i in range(0, tamaño):
+                if count < 3:
+                    elemento = lt.getElement(orden, i)
+                    tres_p_u.append(elemento)
+                    count += 1
+            i == tamaño -3   
+            #print("ULTIMAS 3:")      
+            for i in  range(i,tamaño+1):
+                #print ("Registro Nro:",i)
+                elemento = lt.getElement(orden, i)
+                tres_p_u.append(elemento)
+                
+            headers ={"Fecha de publicación": [],
+                "Título de la oferta": [],
+                "Nombre de la empresa": [],
+                "Nivel de experticia de la oferta": [],
+                "País de la oferta": [],
+                "Ciudad de la oferta": []}
+            for job in tres_p_u: 
+                headers["Fecha de publicación"].append(job['published_at'])
+                headers["Título de la oferta"].append(job['title'])
+                headers["Nombre de la empresa"].append(job['company_name'])
+                headers["Nivel de experticia de la oferta"].append(job['experience_level'])
+                headers["País de la oferta"].append(job['country_code'])
+                headers["Ciudad de la oferta"].append(job['city'])
+            print(tabulate(headers, headers='keys'))
             #print ("memoria total: ", memoria)
             #print ("tiempo total: ", tiempo)
             
