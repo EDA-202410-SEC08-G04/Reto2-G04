@@ -37,7 +37,7 @@ from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import selectionsort as se
 from DISClib.Algorithms.Sorting import mergesort as merg
 from DISClib.Algorithms.Sorting import quicksort as quk
-
+from datetime import datetime as dt
 assert cf
 
 """
@@ -69,10 +69,10 @@ def new_data_structs():
     data_structs['employments_types'] = lt.newList(datastructure='ARRAY_LIST')
     data_structs['multilocations'] = lt.newList(datastructure='ARRAY_LIST')
     
-    data_structs["id_jobs"]= mp.newMap(203563, maptype='PROBING', loadfactor=0.5)
+    data_structs["id_jobs"]= mp.newMap(5, maptype='PROBING', loadfactor=0.5)
     data_structs["id_skills"]= mp.newMap(577162, maptype='PROBING', loadfactor=0.5)
     data_structs["id_employments"]= mp.newMap(259837, maptype='PROBING', loadfactor=0.5)
-    data_structs["id_multilocations"] = mp.newMap(244937, maptype='CHAINING', loadfactor=0.5)
+    data_structs["id_multilocations"] = mp.newMap(244937, maptype='PROBING', loadfactor=0.5)
     return data_structs
 
 # Funciones para agregar informacion al modelo
@@ -84,6 +84,23 @@ def add_job(data_structs, job):
     #TODO: Crear la función para agregar elementos a una lista
     id = job["id"]
     mp.put(data_structs["id_jobs"], id, job)
+    
+# Funciones ordenamiento carga de datos de ofertas
+    
+def carga_lista_fechas(data_structs, job):
+    fecha = job["published_at"]
+    #lt.addLast(data_structs['jobs'], fecha)
+    lt.addLast(data_structs['jobs'], job)
+   
+def ofertas_ordenadas(lista_jobs):
+    fechas_ordenadas = merg.sort(lista_jobs, criterio)
+    return fechas_ordenadas 
+
+def criterio(data_1, data_2):
+    if data_1["published_at"] > data_2["published_at"]:
+        return True
+    else:
+       return False
     
 def add_skill(data_structs, skill):
     """
@@ -111,7 +128,7 @@ def add_employments_types(data_structs,  employments_types):
     id = employments_types["id"]
     mp.put(data_structs["id_employments"], id, employments_types)
 
-# Función ordenamiento carga de datos de ofertas
+
 
 # Funciones para creacion de datos
 
@@ -138,12 +155,12 @@ def data_size(data_structs):
     Retorna el tamaño de la lista de datos
     """
     #TODO: Crear la función para obtener el tamaño de una lista
-    jobs=data_structs["jobs"]
-    jobsListSize= lt.size(jobs)
+    
+    jobsListSize= mp.size(data_structs["id_jobs"])
     return jobsListSize
     
 
-#job, num_ofertas_, experiencia, id_pais
+
 def req_1(data_structs):
     
     """
@@ -236,7 +253,17 @@ def sort_criteria(data_1, data_2):
         _type_: _description_
     """
     #TODO: Crear función comparadora para ordenar
-    pass
+    
+    if data_1["published_at"] < data_2["published_at"]:
+        return True
+    
+    elif data_1["published_at"]== data_2["published_at"]:
+        if data_1["company_name"] < data_2["company_name"]:
+            return True
+        else: 
+            return False
+   
+    
 
 
 def sort(data_structs):
@@ -244,4 +271,5 @@ def sort(data_structs):
     Función encargada de ordenar la lista con los datos
     """
     #TODO: Crear función de ordenamiento
+    
     pass
