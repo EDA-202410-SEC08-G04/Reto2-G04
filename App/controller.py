@@ -130,14 +130,14 @@ def get_data(control, id):
     pass
 
 
-def req_1(control):
+def req_1(control,id_pais, num_ofertas,nivel_experiencia):
     
     """
     Retorna el resultado del requerimiento 1
     """
     # TODO: Modificar el requerimiento 1
-
-    pass
+    result= model.req_1(control,id_pais, num_ofertas,nivel_experiencia)
+    return result
 
 
 

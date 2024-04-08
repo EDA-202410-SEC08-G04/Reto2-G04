@@ -101,6 +101,22 @@ def criterio(data_1, data_2):
         return True
     else:
        return False
+   
+def criterio_2(data_1, data_2):
+ 
+    date_str1 = data_1["published_at"]
+    date_str2 = data_2["published_at"]
+    format = "%Y-%m-%dT%H:%M:%S.%fZ"
+    
+    # Convert the string dates to datetime objects
+    date1 = dt.strptime(date_str1, format)
+    date2 = dt.strptime(date_str2, format)
+    
+    # Compare the dates and return the bigger (later) one
+    if date1 > date2:
+        return True
+    else:
+        return False  
     
 def add_skill(data_structs, skill):
     """
@@ -159,17 +175,45 @@ def data_size(data_structs):
     jobsListSize= mp.size(data_structs["id_jobs"])
     return jobsListSize
     
+def add_job(data_structs, job):
+    """
+    Función para agregar nuevos elementos a la lista
+    """
+    #TODO: Crear la función para agregar elementos a una lista
+    id = job["id"]
+    mp.put(data_structs["id_jobs"], id, job)
+    
 
 
-def req_1(data_structs):
+def req_1(data_structs,id_pais, num_ofertas,nivel_experiencia):
     
     """
     Función que soluciona el requerimiento 1
     """
     # TODO: Realizar el requerimiento 1
+    lista_filtro=lt.newList("ARRAY_LIST")
+    #filter_country_experience=lt.newList()
     id_jobs=data_structs["id_jobs"]
-   # list_id_jobs= mp.valueSet(id_jobs)
-    return id_jobs
+    keys= mp.keySet(id_jobs)
+    size_keys= lt.size(keys)
+    for i in range(0, size_keys+1):
+        element= lt.getElement(keys, i)
+        table_element= mp.get(id_jobs, element)
+        country_code_element= table_element["value"]["country_code"]
+        experience_level=table_element["value"]["experience_level"]
+        if country_code_element==id_pais and experience_level==nivel_experiencia:
+            lt.addLast(lista_filtro,table_element["value"])
+    listed_dates = merg.sort(lista_filtro, criterio_2)
+    lista_final=lt.newList("ARRAY_LIST")
+    for j in range(1,int(num_ofertas)+1):
+        jod_a_insertar=lt.getElement(listed_dates,j)
+        lt.addLast(lista_final,jod_a_insertar)
+    
+    return lista_final
+        
+ 
+        
+
     
 
 

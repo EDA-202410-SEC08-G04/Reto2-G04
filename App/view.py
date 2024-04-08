@@ -73,7 +73,7 @@ def load_data(control, tamaño_archivo):
     #data, tiempo, memoria =controller.load_data(data_structs,control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-employments_types.csv'), (tamaño_archivo + '-multilocations.csv'))
     #return data, tiempo, memoria
     
-    controller.load_data(control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-employments_types.csv'), (tamaño_archivo + '-multilocations.csv'))
+    controller.load_data(control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-multilocations.csv'), (tamaño_archivo + '-employments_types.csv'))
     
     #return data,jobsfile
 
@@ -197,12 +197,36 @@ if __name__ == "__main__":
                 headers["Nivel de experticia de la oferta"].append(job['experience_level'])
                 headers["País de la oferta"].append(job['country_code'])
                 headers["Ciudad de la oferta"].append(job['city'])
-            print(tabulate(headers, headers='keys'))
+            print(tabulate(headers, headers='keys', tablefmt="simple_grid"))
             #print ("memoria total: ", memoria)
             #print ("tiempo total: ", tiempo)
             
         elif int(inputs) == 2:
-            print_req_1(control)
+            id_pais= input("Por favor introdusca el código del país:")
+            nivel_experiencia= input("Por favor introdusca el nivel de experiencia:")
+            num_ofertas= input("Por favor introdusca la cantidad de ofertas a consultar:")
+            result=controller.req_1(datastructs, id_pais, num_ofertas,nivel_experiencia)
+            headers ={"Fecha de publicación": [],
+              "Título de la oferta": [],
+              "Empresa que publica": [],
+              "Nivel experticia": [],
+              "País de la oferta": [],
+              "Ciudad de la oferta": [],
+              "Tamanio de la empresa de la oferta":[],
+              "Tipo de ubicación de trabajo":[],
+              "Disponible a contratar ucranianos":[]
+              }
+            for job in lt.iterator(result): 
+                headers["Fecha de publicación"].append(job['published_at'])
+                headers["Título de la oferta"].append(job['title'])
+                headers["Empresa que publica"].append(job['company_name'])
+                headers["Nivel experticia"].append(job['experience_level'])
+                headers["País de la oferta"].append(job['country_code'])
+                headers["Ciudad de la oferta"].append(job['city'])
+                headers["Tamanio de la empresa de la oferta"].append(job['company_size'])
+                headers["Tipo de ubicación de trabajo"].append(job['workplace_type'])
+                headers["Disponible a contratar ucranianos"].append(job['open_to_hire_ukrainians'])
+            print(tabulate(headers, headers='keys', tablefmt="simple_grid"))
 
         elif int(inputs) == 3:
             print_req_2(control)
