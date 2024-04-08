@@ -101,12 +101,35 @@ def print_req_2(control):
     pass
 
 
-def print_req_3(control):
+def print_req_3(control,nombre_empresa,fecha_inicial,fecha_final):
     """
         Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
-    pass
+    jobs=controller.req_3(control,nombre_empresa,fecha_inicial,fecha_final)
+    
+    
+    headers ={"Fecha de publicación": [],
+              "Título de la oferta": [],
+              "Empresa que publica": [],
+              "Nivel experticia": [],
+              "País de la oferta": [],
+              "Ciudad de la oferta": [],
+              "Tamaño de la empresa de la oferta":[],
+              "Tipo de lugar de trabajo de la oferta":[],
+              "Disponible a contratar ucranianos":[]}
+    for job in lt.iterator(jobs): 
+        headers["Fecha de publicación"].append(job['published_at'])
+        headers["Título de la oferta"].append(job['title'])
+        headers["Empresa que publica"].append(job['company_name'])
+        headers["Nivel experticia"].append(job['experience_level'])
+        headers["País de la oferta"].append(job['country_code'])
+        headers["Ciudad de la oferta"].append(job['city'])
+        headers["Tamaño de la empresa de la oferta"].append(job['company_size'])
+        headers["Tipo de lugar de trabajo de la oferta"].append(job['workplace_type'])
+        headers["Disponible a contratar ucranianos"].append(job['open_to_hire_ukrainians'])
+        
+    return headers 
 
 
 def print_req_4(control):
@@ -208,7 +231,13 @@ if __name__ == "__main__":
             print_req_2(control)
 
         elif int(inputs) == 4:
-            print_req_3(control)
+            nombre_empresa=input("Escribe el nombre de la empresa que quieres consultar: ")
+            fecha_inicial=input("Escribe La fecha inicial del periodo a consultar en el formato YYYY-MM-DD: ")
+            fecha_final=input("Escribe La fecha final del periodo a consultar en el formato YYYY-MM-DD: ")
+            print ("Estas son las N ofertas de trabajo según el nombre de la empresa y la fecha de publicación:" )
+            resultado_req_3=print_req_3(control,nombre_empresa,fecha_inicial,fecha_final)
+            print(tabulate(resultado_req_3,headers='keys',tablefmt="grid"))
+            
 
         elif int(inputs) == 5:
             print_req_4(control)

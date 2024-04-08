@@ -39,6 +39,7 @@ from DISClib.Algorithms.Sorting import mergesort as merg
 from DISClib.Algorithms.Sorting import quicksort as quk
 from datetime import datetime as dt
 assert cf
+from datetime import datetime as dt
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá
@@ -69,7 +70,7 @@ def new_data_structs():
     data_structs['employments_types'] = lt.newList(datastructure='ARRAY_LIST')
     data_structs['multilocations'] = lt.newList(datastructure='ARRAY_LIST')
     
-    data_structs["id_jobs"]= mp.newMap(5, maptype='PROBING', loadfactor=0.5)
+    data_structs["id_jobs"]= mp.newMap(206563, maptype='PROBING', loadfactor=0.5)
     data_structs["id_skills"]= mp.newMap(577162, maptype='PROBING', loadfactor=0.5)
     data_structs["id_employments"]= mp.newMap(259837, maptype='PROBING', loadfactor=0.5)
     data_structs["id_multilocations"] = mp.newMap(244937, maptype='PROBING', loadfactor=0.5)
@@ -176,13 +177,55 @@ def req_2(data_structs):
     pass
 
 
-def req_3(data_structs):
+def comparar_fechas_pais_req_3(trabajo_1,trabajo_2):
+    if trabajo_1["published_at"]<trabajo_2["published_at"]:
+        return True
+    
+    elif trabajo_1["published_at"]==trabajo_2["published_at"]:
+        return trabajo_1["country_code"]<trabajo_2["country_code"]
+    
+    else: 
+        return False
+
+def req_3(data_structs, nombre_empresa, fecha_inicial, fecha_final):
     """
     Función que soluciona el requerimiento 3
     """
     # TODO: Realizar el requerimiento 3
-    pass
-
+    mapa= data_structs["id_jobs"]
+    fecha_i=dt.strptime(fecha_inicial, "%Y-%m-%d")
+    fecha_f=dt.strptime(fecha_final, "%Y-%m-%d")
+    llaves=mp.keySet(mapa)
+    req_3_list=lt.newList('ARRAY_LIST')
+    
+    for llave in lt.iterator(llaves):
+        pareja=mp.get(mapa,llave)
+        job=me.getValue(pareja)
+        fecha_y_hora=job["published_at"]
+        fecha_trabajo=dt.strptime(fecha_y_hora, "%Y-%m-%dT%H:%M:%S.%fZ")
+        if job["company_name"]==nombre_empresa:
+            if fecha_trabajo>=fecha_i and fecha_trabajo<=fecha_f:
+                lt.addLast(req_3_list,job)
+                
+    req_3_ordenado=se.sort(req_3_list,comparar_fechas_pais_req_3)
+                
+    """cantidad_de_ofertas=lt.size(req_3_list)
+    
+    contador_junior=0
+    contador_mid=0
+    contador_senior=0
+    for trabajo in lt.iterator(req_3_list):
+        if trabajo["experience_level"]=="junior":
+           contador_junior=contador_junior+1
+        if trabajo["experience_level"]=="mid":
+           contador_mid=contador_mid+1
+        if trabajo["experience_level"]=="senior":
+           contador_senior=contador_senior+1"""
+        
+    
+    return req_3_ordenado
+        
+   
 
 def req_4(data_structs):
     """
@@ -200,12 +243,13 @@ def req_5(data_structs):
     pass
 
 
-def req_6(data_structs):
+def req_6(data_structs, n_ciudades, expertisia, año):
     """
     Función que soluciona el requerimiento 6
     """
     # TODO: Realizar el requerimiento 6
-    pass
+    
+    
 
 
 def req_7(data_structs):
