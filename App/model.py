@@ -192,7 +192,6 @@ def req_1(data_structs,id_pais, num_ofertas,nivel_experiencia):
     """
     # TODO: Realizar el requerimiento 1
     lista_filtro=lt.newList("ARRAY_LIST")
-    #filter_country_experience=lt.newList()
     id_jobs=data_structs["id_jobs"]
     keys= mp.keySet(id_jobs)
     size_keys= lt.size(keys)
@@ -214,16 +213,12 @@ def req_1(data_structs,id_pais, num_ofertas,nivel_experiencia):
  
         
 
-    
-
-
-
 def req_2(data_structs):
     """
     Función que soluciona el requerimiento 2
     """
     # TODO: Realizar el requerimiento 2
-    pass
+    
 
 
 def req_3(data_structs):
@@ -234,13 +229,26 @@ def req_3(data_structs):
     pass
 
 
-def req_4(data_structs):
-    """
-    Función que soluciona el requerimiento 4
-    """
-    # TODO: Realizar el requerimiento 4
-    pass
+def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
+    lista_filtro = lt.newList("ARRAY_LIST")
+    id_jobs = data_structs["id_jobs"]
+    keys = mp.keySet(id_jobs)
+    size_keys = lt.size(keys)
+    for i in range(1, size_keys + 1):  
+        element = lt.getElement(keys, i)
+        table_element = mp.get(id_jobs, element)
+        country_code_element = table_element["value"]["country_code"]
+        date = table_element["value"]["published_at"]
+        date_stripped = dt.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ")
+        stripped_datetime_fecha_inicial= dt.strptime(fecha_inicial, "%Y-%m-%d")
+        stripped_datetime_fecha_final= dt.strptime(fecha_final, "%Y-%m-%d")
 
+        if country_code_element == id_pais and stripped_datetime_fecha_inicial <= date_stripped <= stripped_datetime_fecha_final:
+            lt.addLast(lista_filtro, table_element["value"])
+            
+    listed_dates = merg.sort(lista_filtro, criterio_2)
+    return listed_dates
+        
 
 def req_5(data_structs):
     """

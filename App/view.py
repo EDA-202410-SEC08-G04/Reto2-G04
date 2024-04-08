@@ -235,7 +235,29 @@ if __name__ == "__main__":
             print_req_3(control)
 
         elif int(inputs) == 5:
-            print_req_4(control)
+            id_pais= input("Por favor introdusca el código del país:")
+            fecha_inicial= input("Por favor introdusca una fecha inicial para el periodo de consulta:")
+            fecha_final= input("Por favor introdusca una fecha final para el periodo de consulta:")
+            result=controller.req_4(datastructs, id_pais, fecha_inicial, fecha_final)
+            headers ={"Fecha de publicación": [],
+              "Título de la oferta": [],
+              "Empresa que publica": [],
+              "Nivel experticia": [],
+              "País de la oferta": [],
+              "Ciudad de la oferta": [],
+              "Tipo de lugar de trabajo de la oferta":[],
+              "Disponible a contratar ucranianos":[]
+              }
+            for job in lt.iterator(result): 
+                headers["Fecha de publicación"].append(job['published_at'])
+                headers["Título de la oferta"].append(job['title'])
+                headers["Empresa que publica"].append(job['company_name'])
+                headers["Nivel experticia"].append(job['experience_level'])
+                headers["País de la oferta"].append(job['country_code'])
+                headers["Ciudad de la oferta"].append(job['city'])
+                headers["Tipo de lugar de trabajo de la oferta"].append(job['workplace_type'])
+                headers["Disponible a contratar ucranianos"].append(job['open_to_hire_ukrainians'])
+            print(tabulate(headers, headers='keys', tablefmt="simple_grid"))
 
         elif int(inputs) == 6:
             print_req_5(control)
