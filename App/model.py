@@ -96,23 +96,21 @@ def ofertas_ordenadas(lista_jobs):
     fechas_ordenadas = merg.sort(lista_jobs, criterio)
     return fechas_ordenadas 
 
-def criterio(data_1, data_2):
-    if data_1["published_at"] > data_2["published_at"]:
-        return True
-    else:
-       return False
+# def criterio(data_1, data_2):
+#     if data_1["published_at"] > data_2["published_at"]:
+#         return True
+#     else:
+#        return False
    
-def criterio_2(data_1, data_2):
+def criterio(data_1, data_2):
  
     date_str1 = data_1["published_at"]
     date_str2 = data_2["published_at"]
     format = "%Y-%m-%dT%H:%M:%S.%fZ"
     
-    # Convert the string dates to datetime objects
     date1 = dt.strptime(date_str1, format)
     date2 = dt.strptime(date_str2, format)
     
-    # Compare the dates and return the bigger (later) one
     if date1 > date2:
         return True
     else:
@@ -202,7 +200,7 @@ def req_1(data_structs,id_pais, num_ofertas,nivel_experiencia):
         experience_level=table_element["value"]["experience_level"]
         if country_code_element==id_pais and experience_level==nivel_experiencia:
             lt.addLast(lista_filtro,table_element["value"])
-    listed_dates = merg.sort(lista_filtro, criterio_2)
+    listed_dates = merg.sort(lista_filtro, criterio)
     lista_final=lt.newList("ARRAY_LIST")
     for j in range(1,int(num_ofertas)+1):
         jod_a_insertar=lt.getElement(listed_dates,j)
@@ -246,7 +244,7 @@ def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
         if country_code_element == id_pais and stripped_datetime_fecha_inicial <= date_stripped <= stripped_datetime_fecha_final:
             lt.addLast(lista_filtro, table_element["value"])
             
-    listed_dates = merg.sort(lista_filtro, criterio_2)
+    listed_dates = merg.sort(lista_filtro, criterio)
     return listed_dates
         
 
