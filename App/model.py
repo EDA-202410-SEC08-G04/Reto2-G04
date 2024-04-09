@@ -275,7 +275,7 @@ def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
     id_jobs = data_structs["id_jobs"]
     keys = mp.keySet(id_jobs)
     size_keys = lt.size(keys)
-    for i in range(1, size_keys + 1):  
+    for i in lt.iterator(size_keys):  
         element = lt.getElement(keys, i)
         table_element = mp.get(id_jobs, element)
         country_code_element = table_element["value"]["country_code"]
@@ -286,8 +286,57 @@ def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
 
         if country_code_element == id_pais and stripped_datetime_fecha_inicial <= date_stripped <= stripped_datetime_fecha_final:
             lt.addLast(lista_filtro, table_element["value"])
-            
+        
     listed_dates = merg.sort(lista_filtro, criterio)
+            
+    map_company=mp.newMap(numelements=17,
+           prime=109345121,
+           maptype='PROBING',
+           loadfactor=0.5,
+           cmpfunction=None)
+    
+    map_city=mp.newMap(numelements=17,
+           prime=109345121,
+           maptype='PROBING',
+           loadfactor=0.5,
+           cmpfunction=None)
+            
+    for key in lt.iterator(keys):
+        pair= mp.get(id_jobs, key)
+        offer=mp.getValue(pair)
+        for offer in lt.iterator(listed_dates):
+            company_name= offer["company_name"]
+            if offer["company_name"]== company_name:
+                if mp.contains(map_company,company_name)==False:
+                    mp.put(map_company, company_name,)
+
+                mp.put(map_company)
+    
+    for offer in lt.iterator(listed_dates):
+        company_name= offer["company_name"]
+        if mp.contains(map_company,company_name)==False:
+            contador=1
+            mp.put(map_company, company_name, contador)
+        else:
+            contador+=1
+    
+    for city in lt.iterator(listed_dates):
+        city_= city["city"]
+        if mp.cointains(map_city, city_)==False:
+            contador=1
+            mp.put(map_city, city, contador)
+        else:
+            contador+=1
+    
+    list_min_max_cities= lt.newList("ARRAY_LIST")
+    cities= mp.keySet()
+    for city in lt.iterator(cities):
+        pair= mp.get(id_jobs, city)
+        lt.addLast(list_min_max_cities, [pair])
+    
+        
+        
+    
     return listed_dates
         
 
