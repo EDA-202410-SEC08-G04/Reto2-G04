@@ -274,6 +274,7 @@ def req_6(data_structs, n_ciudades, expertisia, año):
            maptype='PROBING',
            loadfactor=0.5,
            cmpfunction=None)
+    #Este mapa ciudades 2 es por si acaso necesite otro mapa 
     
      
     for llave in lt.iterator(llaves):
