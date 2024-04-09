@@ -205,8 +205,8 @@ def req_1(data_structs,id_pais, num_ofertas,nivel_experiencia):
     listed_dates = merg.sort(lista_filtro, criterio)
     lista_final=lt.newList("ARRAY_LIST")
     for j in range(1,int(num_ofertas)+1):
-        jod_a_insertar=lt.getElement(listed_dates,j)
-        lt.addLast(lista_final,jod_a_insertar)
+        job_a_insertar=lt.getElement(listed_dates,j)
+        lt.addLast(lista_final,job_a_insertar)
     
     return lista_final
         
@@ -308,19 +308,22 @@ def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
             mp.put(map_company, company_name, contador)
         else:
             contador+=1
+            mp.put(map_company,company_name, contador )
     
     for city in lt.iterator(lista_filtro):
         city_= city["city"]
-        if mp.cointains(map_city, city_)==False:
+        if mp.contains(map_city, city_)==False:
             contador=1
             mp.put(map_city, city, contador)
         else:
             contador+=1
+            mp.put(map_city,company_name, contador )
+
     
     list_min_max_cities= lt.newList("ARRAY_LIST")
     cities= mp.keySet(map_city)
     for city in lt.iterator(cities):
-        pair= mp.get(id_jobs, city)
+        pair= mp.get(map_city, city)
         lt.addLast(list_min_max_cities, [pair])
         for pair in lt.iterator(list_min_max_cities):
             value= pair[1]

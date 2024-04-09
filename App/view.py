@@ -1,4 +1,4 @@
-"""
+﻿"""
  * Copyright 2020, Departamento de sistemas y Computación, Universidad
  * de Los Andes
  *
@@ -73,8 +73,7 @@ def load_data(control, tamaño_archivo):
     #data, tiempo, memoria =controller.load_data(data_structs,control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-employments_types.csv'), (tamaño_archivo + '-multilocations.csv'))
     #return data, tiempo, memoria
     
-    controller.load_data(control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-multilocations.csv'), (tamaño_archivo + '-employments_types.csv'))
-    
+    controller.load_data(control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-employments_types.csv'), (tamaño_archivo + '-multilocations.csv'))
     #return data,jobsfile
 
 
@@ -83,13 +82,6 @@ def print_data(control, id):
         Función que imprime un dato dado su ID
     """
     #TODO: Realizar la función para imprimir un elemento
-    pass
-
-def print_req_1(control):
-    """
-        Función que imprime la solución del Requerimiento 1 en consola
-    """
-    # TODO: Imprimir el resultado del requerimiento 1
     pass
 
 
@@ -131,13 +123,6 @@ def print_req_3(control,nombre_empresa,fecha_inicial,fecha_final):
         
     return headers 
 
-
-def print_req_4(control):
-    """
-        Función que imprime la solución del Requerimiento 4 en consola
-    """
-    # TODO: Imprimir el resultado del requerimiento 4
-    pass
 
 
 def print_req_5(control):
@@ -191,7 +176,37 @@ if __name__ == "__main__":
             print("Cargando información de los archivos ....\n")
             #carga, tiempo, memoria = load_data(control, inputs_2,data_structs)
             carga = load_data(control, inputs_2)
-            print(control)
+            datastructs = control["model"]
+            tamaño = controller.cantidad_ofertas(datastructs)
+            print ("El total de ofertas publicadas cargadas es: ", tamaño)
+            orden = controller.ofertas_ordenadas(datastructs)
+            
+            # imprime las primeras 3 ofertas y las 3 ultimas ofertas
+            tres_p_u = []
+            for i in range(1, 4):
+                elemento = lt.getElement(orden, i)
+                tres_p_u.append(elemento)
+                
+            n = tamaño -2     
+            for i in  range(n,tamaño+1):
+                elemento = lt.getElement(orden, i)
+                tres_p_u.append(elemento)
+                
+            headers ={"Fecha de publicación": [],
+                "Título de la oferta": [],
+                "Nombre de la empresa": [],
+                "Nivel de experticia de la oferta": [],
+                "País de la oferta": [],
+                "Ciudad de la oferta": []}
+            for job in tres_p_u: 
+                
+                headers["Fecha de publicación"].append(job['published_at'])
+                headers["Título de la oferta"].append(job['title'])
+                headers["Nombre de la empresa"].append(job['company_name'])
+                headers["Nivel de experticia de la oferta"].append(job['experience_level'])
+                headers["País de la oferta"].append(job['country_code'])
+                headers["Ciudad de la oferta"].append(job['city'])
+            print(tabulate(headers, headers='keys', tablefmt="simple_grid"))
             #print ("memoria total: ", memoria)
             #print ("tiempo total: ", tiempo)
             
@@ -264,7 +279,7 @@ if __name__ == "__main__":
                 headers["Tipo de lugar de trabajo de la oferta"].append(job['workplace_type'])
                 headers["Disponible a contratar ucranianos"].append(job['open_to_hire_ukrainians'])
             print(tabulate(headers, headers='keys', tablefmt="simple_grid"))
-
+                                    
         elif int(inputs) == 6:
             print_req_5(control)
 
@@ -275,6 +290,7 @@ if __name__ == "__main__":
             print("Estas son las N ciudades con mayor número de oferta de trabajo segun la experticia seleccionada en el año seleccionado: " )
             resultado_req_6=print_req_6(control,n_ciudades, expertisia, año)
             print(resultado_req_6)
+            print_req_6(control)
 
         elif int(inputs) == 8:
             print_req_7(control)
