@@ -97,11 +97,6 @@ def ofertas_ordenadas(lista_jobs):
     fechas_ordenadas = merg.sort(lista_jobs, criterio)
     return fechas_ordenadas 
 
-# def criterio(data_1, data_2):
-#     if data_1["published_at"] > data_2["published_at"]:
-#         return True
-#     else:
-#        return False
    
 def criterio(data_1, data_2):
  
@@ -116,6 +111,12 @@ def criterio(data_1, data_2):
         return True
     else:
         return False  
+    
+def criterio_2(data_1, data_2):
+    if data_1 > data_2:
+        return True
+    else:
+       return False
     
 def add_skill(data_structs, skill):
     """
@@ -275,7 +276,7 @@ def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
     id_jobs = data_structs["id_jobs"]
     keys = mp.keySet(id_jobs)
     size_keys = lt.size(keys)
-    for i in lt.iterator(size_keys):  
+    for i in range(1, size_keys + 1):  
         element = lt.getElement(keys, i)
         table_element = mp.get(id_jobs, element)
         country_code_element = table_element["value"]["country_code"]
@@ -286,8 +287,6 @@ def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
 
         if country_code_element == id_pais and stripped_datetime_fecha_inicial <= date_stripped <= stripped_datetime_fecha_final:
             lt.addLast(lista_filtro, table_element["value"])
-        
-    listed_dates = merg.sort(lista_filtro, criterio)
             
     map_company=mp.newMap(numelements=17,
            prime=109345121,
@@ -301,18 +300,8 @@ def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
            loadfactor=0.5,
            cmpfunction=None)
             
-    for key in lt.iterator(keys):
-        pair= mp.get(id_jobs, key)
-        offer=mp.getValue(pair)
-        for offer in lt.iterator(listed_dates):
-            company_name= offer["company_name"]
-            if offer["company_name"]== company_name:
-                if mp.contains(map_company,company_name)==False:
-                    mp.put(map_company, company_name,)
-
-                mp.put(map_company)
     
-    for offer in lt.iterator(listed_dates):
+    for offer in lt.iterator(lista_filtro):
         company_name= offer["company_name"]
         if mp.contains(map_company,company_name)==False:
             contador=1
@@ -320,7 +309,7 @@ def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
         else:
             contador+=1
     
-    for city in lt.iterator(listed_dates):
+    for city in lt.iterator(lista_filtro):
         city_= city["city"]
         if mp.cointains(map_city, city_)==False:
             contador=1
@@ -329,15 +318,28 @@ def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
             contador+=1
     
     list_min_max_cities= lt.newList("ARRAY_LIST")
-    cities= mp.keySet()
+    cities= mp.keySet(map_city)
     for city in lt.iterator(cities):
         pair= mp.get(id_jobs, city)
         lt.addLast(list_min_max_cities, [pair])
+        for pair in lt.iterator(list_min_max_cities):
+            value= pair[1]
+            orderer_values= merg.sort(value, criterio_2)
+            
+    max_city=lt.lastElement(orderer_values)
+    max_count=max_city[1]
+    max_name=max_city[0]
+    min_city= lt.firstElement(orderer_values)
+    min_count=min_city[1]
+    min_name=min_city[0]
     
-        
-        
+    total_offers= lt.size(lista_filtro)
+    total_companies= mp.size(map_company)
+    total_citites= mp.size(map_city)
     
-    return listed_dates
+    
+    
+    return lista_filtro , total_offers, total_companies, total_citites, max_count, max_name, min_count, min_name 
         
 
 def req_5(data_structs):

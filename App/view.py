@@ -267,7 +267,13 @@ if __name__ == "__main__":
             id_pais= input("Por favor introdusca el código del país:")
             fecha_inicial= input("Por favor introdusca una fecha inicial para el periodo de consulta:")
             fecha_final= input("Por favor introdusca una fecha final para el periodo de consulta:")
-            result=controller.req_4(datastructs, id_pais, fecha_inicial, fecha_final)
+            lista_filtro, total_offers, total_companies, total_citites, max_count, max_name, min_count, min_name=controller.req_4(datastructs, id_pais, fecha_inicial, fecha_final)
+            print("El total de ofertas en el país en el periodo de consulta es:", total_offers)
+            print("El total de empresas que publicaron al menos una oferta en el país de consulta es:", total_companies)
+            print("EL número total de ciudades del país de consulta en las que se publicaron ofertas es:", total_citites)
+            print("Ciudad del país de consulta con mayor número de ofertas y su conteo:", max_name + ":" + str(max_count))
+            print("Ciudad del país de consulta con menor número de ofertas (al menos una) y su conteo:", min_name + ":" + str(min_count))
+            
             headers ={"Fecha de publicación": [],
               "Título de la oferta": [],
               "Empresa que publica": [],
@@ -277,7 +283,7 @@ if __name__ == "__main__":
               "Tipo de lugar de trabajo de la oferta":[],
               "Disponible a contratar ucranianos":[]
               }
-            for job in lt.iterator(result): 
+            for job in lt.iterator(lista_filtro): 
                 headers["Fecha de publicación"].append(job['published_at'])
                 headers["Título de la oferta"].append(job['title'])
                 headers["Empresa que publica"].append(job['company_name'])

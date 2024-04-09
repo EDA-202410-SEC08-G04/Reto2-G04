@@ -162,8 +162,9 @@ def req_4(control,id_pais, fecha_inicial, fecha_final):
     Retorna el resultado del requerimiento 4
     """
     # TODO: Modificar el requerimiento 4
-    result= model.req_4(control,id_pais, fecha_inicial, fecha_final)
-    return result
+    lista_filtro, total_offers, total_companies, total_citites, max_count, max_name, min_count, min_name=model.req_4(control,id_pais, fecha_inicial, fecha_final)
+
+    return lista_filtro, total_offers, total_companies, total_citites, max_count, max_name, min_count, min_name
 
 
 def req_5(control):
