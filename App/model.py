@@ -39,6 +39,7 @@ from DISClib.Algorithms.Sorting import mergesort as merg
 from DISClib.Algorithms.Sorting import quicksort as quk
 from datetime import datetime as dt
 assert cf
+from datetime import datetime as dt
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá
@@ -69,7 +70,7 @@ def new_data_structs():
     data_structs['employments_types'] = lt.newList(datastructure='ARRAY_LIST')
     data_structs['multilocations'] = lt.newList(datastructure='ARRAY_LIST')
     
-    data_structs["id_jobs"]= mp.newMap(5, maptype='PROBING', loadfactor=0.5)
+    data_structs["id_jobs"]= mp.newMap(206563, maptype='PROBING', loadfactor=0.5)
     data_structs["id_skills"]= mp.newMap(577162, maptype='PROBING', loadfactor=0.5)
     data_structs["id_employments"]= mp.newMap(259837, maptype='PROBING', loadfactor=0.5)
     data_structs["id_multilocations"] = mp.newMap(244937, maptype='PROBING', loadfactor=0.5)
@@ -219,13 +220,55 @@ def req_2(data_structs):
     
 
 
-def req_3(data_structs):
+def comparar_fechas_pais_req_3(trabajo_1,trabajo_2):
+    if trabajo_1["published_at"]<trabajo_2["published_at"]:
+        return True
+    
+    elif trabajo_1["published_at"]==trabajo_2["published_at"]:
+        return trabajo_1["country_code"]<trabajo_2["country_code"]
+    
+    else: 
+        return False
+
+def req_3(data_structs, nombre_empresa, fecha_inicial, fecha_final):
     """
     Función que soluciona el requerimiento 3
     """
     # TODO: Realizar el requerimiento 3
-    pass
-
+    mapa= data_structs["id_jobs"]
+    fecha_i=dt.strptime(fecha_inicial, "%Y-%m-%d")
+    fecha_f=dt.strptime(fecha_final, "%Y-%m-%d")
+    llaves=mp.keySet(mapa)
+    req_3_list=lt.newList('ARRAY_LIST')
+    
+    for llave in lt.iterator(llaves):
+        pareja=mp.get(mapa,llave)
+        job=me.getValue(pareja)
+        fecha_y_hora=job["published_at"]
+        fecha_trabajo=dt.strptime(fecha_y_hora, "%Y-%m-%dT%H:%M:%S.%fZ")
+        if job["company_name"]==nombre_empresa:
+            if fecha_trabajo>=fecha_i and fecha_trabajo<=fecha_f:
+                lt.addLast(req_3_list,job)
+                
+    req_3_ordenado=se.sort(req_3_list,comparar_fechas_pais_req_3)
+                
+    """cantidad_de_ofertas=lt.size(req_3_list)
+    
+    contador_junior=0
+    contador_mid=0
+    contador_senior=0
+    for trabajo in lt.iterator(req_3_list):
+        if trabajo["experience_level"]=="junior":
+           contador_junior=contador_junior+1
+        if trabajo["experience_level"]=="mid":
+           contador_mid=contador_mid+1
+        if trabajo["experience_level"]=="senior":
+           contador_senior=contador_senior+1"""
+        
+    
+    return req_3_ordenado
+        
+   
 
 def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
     lista_filtro = lt.newList("ARRAY_LIST")
@@ -256,12 +299,140 @@ def req_5(data_structs):
     pass
 
 
-def req_6(data_structs):
+def req_6(data_structs, n_ciudades, expertisia, año):
     """
     Función que soluciona el requerimiento 6
     """
     # TODO: Realizar el requerimiento 6
-    pass
+    
+    mapa= data_structs["id_jobs"]
+    año_tiempo=dt.strptime(año, "%Y")
+    req_6_list=lt.newList('ARRAY_LIST')
+    llaves=mp.keySet(mapa)
+    
+    for llave in lt.iterator(llaves):
+        pareja=mp.get(mapa,llave)
+        trabajo=me.getValue(pareja)
+        fecha_y_hora=trabajo["published_at"]
+        fecha_trabajo=dt.strptime(fecha_y_hora, "%Y-%m-%dT%H:%M:%S.%fZ")
+        if fecha_trabajo==año_tiempo:
+            if expertisia==trabajo["experience_level"]:
+                lt.addLast(req_6_list,trabajo)
+    
+    mapa_ciudades=mp.newMap(numelements=17,
+           prime=109345121,
+           maptype='PROBING',
+           loadfactor=0.5,
+           cmpfunction=None)
+    
+    mapa_ciudades_2=mp.newMap(numelements=17,
+           prime=109345121,
+           maptype='PROBING',
+           loadfactor=0.5,
+           cmpfunction=None)
+    
+     
+    for llave in lt.iterator(llaves):
+        pareja=mp.get(mapa,llave)
+        trabajo=me.getValue(pareja)   
+        for job in lt.iterator(req_6_list):
+            ciudad= job['city']
+            if trabajo["city"]==ciudad:
+                if mp.contains(mapa_ciudades,ciudad)==False:
+                    valor_contador=1
+                    mp.put(mapa_ciudades,ciudad,valor_contador)
+                    mp.put(mapa_ciudades_2,ciudad,valor_contador)
+                    pareja_actualizar=mp.get(mapa_ciudades,ciudad)
+                    pareja_actualizar_2=mp.get(mapa_ciudades,ciudad)
+                elif mp.contains(mapa_ciudades,ciudad)==True:
+                    valor_contador=valor_contador+1
+                    me.setValue(pareja_actualizar,valor_contador)
+                    me.setValue(pareja_actualizar_2,valor_contador)
+                    
+                    
+    
+        
+    
+    
+    
+    
+    llaves_ciudades=mp.keySet(mapa_ciudades)
+    mayor=0
+    menor=10000
+    for llave_ciudad in lt.iterator(llaves_ciudades):
+        pareja_llave=mp.get(mapa,llave_ciudad)
+        cantidad=me.getValue(pareja_llave)
+        ciudad_sacada_mostrar=me.getKey(pareja_llave)
+        if cantidad>mayor:
+            mayor_ciudad_mostrar=ciudad_sacada_mostrar
+            mayor_mostrar=cantidad
+        if cantidad<menor:
+            menor_ciudad=llave_ciudad
+            menor=cantidad
+    
+        
+
+            
+    
+    
+        
+        
+    lista_ciudades_mas=[]        
+    
+    i=0
+    while i<n_ciudades:
+        mayor=0
+        llaves_ciudades=mp.keySet(mapa_ciudades)    
+        for llave_ciudad in lt.iterator(llaves_ciudades):
+            pareja_llave=mp.get(mapa_ciudades,llave_ciudad)
+            cantidad_sacada=me.getValue(pareja_llave)
+            ciudad_sacada=me.getKey(pareja_llave)
+            if cantidad>mayor:
+                mayor_ciudad_elem=ciudad_sacada
+                mayor=cantidad_sacada
+        pareja_elem=mp.get(mapa_ciudades,mayor_ciudad_elem)
+        ciu_ele=me.getKey(pareja_elem)
+                
+        lista_ciudades_mas.append(mayor_ciudad_elem)
+        mp.remove(mapa_ciudades,ciu_ele)
+        
+                
+            
+        i=i+1
+
+    
+    numciudades=len(lista_ciudades_mas)
+    
+    
+    
+    req_6_list_n_ciudades=lt.newList('ARRAY_LIST')
+    
+    for trabajo in lt.iterator(req_6_list):
+        if trabajo["city"] in lista_ciudades_mas:
+            lt.addLast(req_6_list_n_ciudades,trabajo)
+        
+    
+    lst_empresa=[]
+    
+    for trabajo in lt.iterator(req_6_list_n_ciudades):
+        empresa=trabajo["company_name"]
+        if empresa not in lst_empresa:
+            lst_empresa.append(empresa)
+    
+    cantidad_de_empresas=len(lst_empresa)
+        
+
+    total_de_ofertas=lt.size(req_6_list_n_ciudades)
+    
+    salario_promedio=None 
+    
+    
+    
+    rta="Numero de ciudades a consultar: "+str(numciudades)+ ", Cantidad de empresas: "+ str(cantidad_de_empresas)+ ", Cantidad de ofertas: "+str(total_de_ofertas)+", La ciudad con mas ofertas es: "+str(mayor_ciudad_mostrar) +" Y tiene un total de ofertas de "+ str(mayor_mostrar)+", La ciudad con menor cantidad de ofertas es "+ str(menor_ciudad)+" y tiene un total de ofertas de "+ str(menor) 
+    
+    return rta   
+    
+    
 
 
 def req_7(data_structs):
