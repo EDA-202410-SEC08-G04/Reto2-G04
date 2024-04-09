@@ -169,12 +169,12 @@ def req_5(control):
     # TODO: Modificar el requerimiento 5
     pass
 
-def req_6(control):
+def req_6(control, n_ciudades, expertisia, año):
     """
     Retorna el resultado del requerimiento 6
     """
     # TODO: Modificar el requerimiento 6
-    pass
+    return model.req_6(control["model"], n_ciudades, expertisia, año)
 
 
 def req_7(control):

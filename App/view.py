@@ -148,12 +148,12 @@ def print_req_5(control):
     pass
 
 
-def print_req_6(control):
+def print_req_6(control, n_ciudades, expertisia, año):
     """
         Función que imprime la solución del Requerimiento 6 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 6
-    pass
+    return controller.req_6(control, n_ciudades, expertisia, año)
 
 
 def print_req_7(control):
@@ -246,7 +246,12 @@ if __name__ == "__main__":
             print_req_5(control)
 
         elif int(inputs) == 7:
-            print_req_6(control)
+            n_ciudades=int(input("Escribe la cantidad de ciudades que quiere consultar: "))
+            expertisia=input("Escriba el nivel de experiencia a consultar(junior, mid, senior): ")
+            año=(input("Escribe el año que te gustaria consultar: "))
+            print("Estas son las N ciudades con mayor número de oferta de trabajo segun la experticia seleccionada en el año seleccionado: " )
+            resultado_req_6=print_req_6(control,n_ciudades, expertisia, año)
+            print(resultado_req_6)
 
         elif int(inputs) == 8:
             print_req_7(control)
