@@ -1,4 +1,4 @@
-﻿"""
+"""
  * Copyright 2020, Departamento de sistemas y Computación, Universidad
  * de Los Andes
  *
@@ -191,36 +191,7 @@ if __name__ == "__main__":
             print("Cargando información de los archivos ....\n")
             #carga, tiempo, memoria = load_data(control, inputs_2,data_structs)
             carga = load_data(control, inputs_2)
-            datastructs = control["model"]
-            tamaño = controller.cantidad_ofertas(datastructs)
-            print ("El total de ofertas publicadas cargadas es: ", tamaño)
-            orden = controller.ofertas_ordenadas(datastructs)
-            
-            # imprime las primeras 3 ofertas y las 3 ultimas ofertas
-            tres_p_u = []
-            for i in range(1, 4):
-                elemento = lt.getElement(orden, i)
-                tres_p_u.append(elemento)
-                
-            n = tamaño -2     
-            for i in  range(n,tamaño+1):
-                elemento = lt.getElement(orden, i)
-                tres_p_u.append(elemento)
-                
-            headers ={"Fecha de publicación": [],
-                "Título de la oferta": [],
-                "Nombre de la empresa": [],
-                "Nivel de experticia de la oferta": [],
-                "País de la oferta": [],
-                "Ciudad de la oferta": []}
-            for job in tres_p_u: 
-                headers["Fecha de publicación"].append(job['published_at'])
-                headers["Título de la oferta"].append(job['title'])
-                headers["Nombre de la empresa"].append(job['company_name'])
-                headers["Nivel de experticia de la oferta"].append(job['experience_level'])
-                headers["País de la oferta"].append(job['country_code'])
-                headers["Ciudad de la oferta"].append(job['city'])
-            print(tabulate(headers, headers='keys', tablefmt="simple_grid"))
+            print(control)
             #print ("memoria total: ", memoria)
             #print ("tiempo total: ", tiempo)
             
