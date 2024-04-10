@@ -73,8 +73,7 @@ def load_data(control, tamaño_archivo):
     #data, tiempo, memoria =controller.load_data(data_structs,control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-employments_types.csv'), (tamaño_archivo + '-multilocations.csv'))
     #return data, tiempo, memoria
     
-    controller.load_data(control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-multilocations.csv'), (tamaño_archivo + '-employments_types.csv'))
-    
+    controller.load_data(control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-employments_types.csv'), (tamaño_archivo + '-multilocations.csv'))
     #return data,jobsfile
 
 
@@ -83,13 +82,6 @@ def print_data(control, id):
         Función que imprime un dato dado su ID
     """
     #TODO: Realizar la función para imprimir un elemento
-    pass
-
-def print_req_1(control):
-    """
-        Función que imprime la solución del Requerimiento 1 en consola
-    """
-    # TODO: Imprimir el resultado del requerimiento 1
     pass
 
 
@@ -131,13 +123,6 @@ def print_req_3(control,nombre_empresa,fecha_inicial,fecha_final):
         
     return headers 
 
-
-def print_req_4(control):
-    """
-        Función que imprime la solución del Requerimiento 4 en consola
-    """
-    # TODO: Imprimir el resultado del requerimiento 4
-    pass
 
 
 def print_req_5(control):
@@ -214,6 +199,7 @@ if __name__ == "__main__":
                 "País de la oferta": [],
                 "Ciudad de la oferta": []}
             for job in tres_p_u: 
+        
                 headers["Fecha de publicación"].append(job['published_at'])
                 headers["Título de la oferta"].append(job['title'])
                 headers["Nombre de la empresa"].append(job['company_name'])
@@ -228,7 +214,9 @@ if __name__ == "__main__":
             id_pais= input("Por favor introdusca el código del país:")
             nivel_experiencia= input("Por favor introdusca el nivel de experiencia:")
             num_ofertas= input("Por favor introdusca la cantidad de ofertas a consultar:")
-            result=controller.req_1(datastructs, id_pais, num_ofertas,nivel_experiencia)
+            lista_final, ofertas_trabajo_pais, ofertas_trabajo_condicion=controller.req_1(datastructs, id_pais, num_ofertas,nivel_experiencia)
+            print("El total 1de ofertas de trabajo ofrecidas según el país:" + ofertas_trabajo_pais)
+            print("El total de ofertas de trabajo ofrecidas según la condición (junior, mid o senior):" + ofertas_trabajo_condicion)
             headers ={"Fecha de publicación": [],
               "Título de la oferta": [],
               "Empresa que publica": [],
@@ -239,7 +227,7 @@ if __name__ == "__main__":
               "Tipo de ubicación de trabajo":[],
               "Disponible a contratar ucranianos":[]
               }
-            for job in lt.iterator(result): 
+            for job in lt.iterator(lista_final): 
                 headers["Fecha de publicación"].append(job['published_at'])
                 headers["Título de la oferta"].append(job['title'])
                 headers["Empresa que publica"].append(job['company_name'])
@@ -293,7 +281,7 @@ if __name__ == "__main__":
                 headers["Tipo de lugar de trabajo de la oferta"].append(job['workplace_type'])
                 headers["Disponible a contratar ucranianos"].append(job['open_to_hire_ukrainians'])
             print(tabulate(headers, headers='keys', tablefmt="simple_grid"))
-
+                                    
         elif int(inputs) == 6:
             print_req_5(control)
 
@@ -304,6 +292,7 @@ if __name__ == "__main__":
             print("Estas son las N ciudades con mayor número de oferta de trabajo segun la experticia seleccionada en el año seleccionado: " )
             resultado_req_6=print_req_6(control,n_ciudades, expertisia, año)
             print(resultado_req_6)
+            print_req_6(control)
 
         elif int(inputs) == 8:
             print_req_7(control)
