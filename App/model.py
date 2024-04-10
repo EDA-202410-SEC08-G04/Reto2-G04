@@ -83,7 +83,9 @@ def add_job(data_structs, job):
     mp.put(data_structs["id_jobs"], id, job)
     
 # Funciones ordenamiento carga de datos de ofertas
-    
+
+
+
 def carga_lista_fechas(data_structs, job):
     fecha = job["published_at"]
     #lt.addLast(data_structs['jobs'], fecha)
@@ -196,13 +198,13 @@ def req_1(data_structs,id_pais, num_ofertas,nivel_experiencia):
     id_jobs=data_structs["id_jobs"]
     keys= mp.keySet(id_jobs)
     size_keys= lt.size(keys)
+    ofertas_trabajo_pais=0
+    ofertas_trabajo_condicion=0
     for i in range(0, size_keys+1):
         element= lt.getElement(keys, i)
         table_element= mp.get(id_jobs, element)
         country_code_element= table_element["value"]["country_code"]
         experience_level=table_element["value"]["experience_level"]
-        ofertas_trabajo_pais=0
-        ofertas_trabajo_condicion=0
         if country_code_element==id_pais:
             ofertas_trabajo_pais+=1
         if experience_level==nivel_experiencia:
@@ -214,7 +216,7 @@ def req_1(data_structs,id_pais, num_ofertas,nivel_experiencia):
     for j in range(1,int(num_ofertas)+1):
         job_a_insertar=lt.getElement(listed_dates,j)
         lt.addLast(lista_final,job_a_insertar)
-    
+
     return lista_final, str(ofertas_trabajo_pais), str(ofertas_trabajo_condicion)
         
  
@@ -493,7 +495,7 @@ def req_6(data_structs, n_ciudades, expertisia, año):
     
 
 
-def req_7(data_structs):
+def req_7(data_structs, año, experticia):
     """
     Función que soluciona el requerimiento 7
     """
@@ -504,6 +506,18 @@ def req_7(data_structs):
            loadfactor=0.5,
            cmpfunction=None)
     
+    mapa= data_structs["id_jobs"]
+    año_tiempo=dt.strptime(año, "%Y")
+    req_7_list=lt.newList('ARRAY_LIST')
+    llaves=mp.keySet(mapa)
+    for llave in lt.iterator(llaves):
+        pareja=mp.get(mapa,llave)
+        trabajo=me.getValue(pareja)
+        fecha_y_hora=trabajo["published_at"]
+        fecha_trabajo=dt.strptime(fecha_y_hora, "%Y-%m-%dT%H:%M:%S.%fZ")
+        if fecha_trabajo==año_tiempo:
+            if experticia==trabajo["experience_level"]:
+                lt.addLast(req_7_list,trabajo)
     pass
 
 
