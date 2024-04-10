@@ -187,7 +187,7 @@ def comparar_fechas_pais_req_3(trabajo_1,trabajo_2):
     else: 
         return False
 
-def req_3_1(data_structs, nombre_empresa, fecha_inicial, fecha_final):
+def req_3(data_structs, nombre_empresa, fecha_inicial, fecha_final):
     """
     Función que soluciona el requerimiento 3
     """
@@ -208,30 +208,25 @@ def req_3_1(data_structs, nombre_empresa, fecha_inicial, fecha_final):
                 lt.addLast(req_3_list,job)
                 
     req_3_ordenado=se.sort(req_3_list,comparar_fechas_pais_req_3)
-                
-   
-        
     
-    return req_3_ordenado
-
-
-
-        
-def req_3_2(data_structs, nombre_empresa, fecha_inicial, fecha_final):
-    
-    req_3_1(data_structs, nombre_empresa, fecha_inicial, fecha_final)
+    cantidad_ofertas=lt.size(req_3_ordenado)
     
     
     contador_junior=0
     contador_mid=0
     contador_senior=0
-    for trabajo in lt.iterator():
+    for trabajo in lt.iterator(req_3_ordenado):
         if trabajo["experience_level"]=="junior":
            contador_junior=contador_junior+1
         if trabajo["experience_level"]=="mid":
            contador_mid=contador_mid+1
         if trabajo["experience_level"]=="senior":
            contador_senior=contador_senior+1
+
+    print("la cantidad de ofertas es: "+str(cantidad_ofertas), "; Junior: "+ str(contador_junior)+"; mid: "+ str(contador_mid)+"; Senior: "+ str(contador_senior))
+          
+    return req_3_ordenado
+      
 
 def req_4(data_structs):
     """
@@ -264,10 +259,15 @@ def req_6(data_structs, n_ciudades, expertisia, año):
         pareja=mp.get(mapa,llave)
         trabajo=me.getValue(pareja)
         fecha_y_hora=trabajo["published_at"]
-        fecha_trabajo=dt.strptime(fecha_y_hora, "%Y-%m-%dT%H:%M:%S.%fZ")
-        if fecha_trabajo>=año_tiempo:
-            if expertisia==trabajo["experience_level"]:
+        fecha_y_hora_separados=fecha_y_hora.split("-")
+        fecha_trabajo=dt.strptime(fecha_y_hora_separados[0], "%Y")
+        if fecha_trabajo==año_tiempo:
+            if expertisia==trabajo["experience_level"] or expertisia=="indiferente":
                 lt.addLast(req_6_list,trabajo)
+    
+                
+                
+        
     
     mapa_ciudades=mp.newMap(numelements=17,
            prime=109345121,
@@ -282,26 +282,41 @@ def req_6(data_structs, n_ciudades, expertisia, año):
            cmpfunction=None)
     #Este mapa ciudades 2 es por si acaso necesite otro mapa 
     
-     
-    for llave in lt.iterator(llaves):
-        pareja=mp.get(mapa,llave)
-        trabajo=me.getValue(pareja)   
-        for job in lt.iterator(req_6_list):
-            ciudad= job['city']
-            if trabajo["city"]==ciudad:
-                if mp.contains(mapa_ciudades,ciudad)==False:
-                    valor_contador=1
-                    mp.put(mapa_ciudades,ciudad,valor_contador)
-                    mp.put(mapa_ciudades_2,ciudad,valor_contador)
-                    pareja_actualizar=mp.get(mapa_ciudades,ciudad)
-                    pareja_actualizar_2=mp.get(mapa_ciudades,ciudad)
-                elif mp.contains(mapa_ciudades,ciudad)==True:
-                    valor_contador=valor_contador+1
-                    me.setValue(pareja_actualizar,valor_contador)
-                    me.setValue(pareja_actualizar_2,valor_contador)
+    valores_ciudades={}
+    
+    for trabajo_lista in lt.iterator(req_6_list):
+        ciudad_lista=trabajo_lista['city']    
+        if ciudad_lista not in valores_ciudades:
+            valor_contador=1
+            valores_ciudades[ciudad_lista]=valor_contador
+        elif ciudad_lista in valores_ciudades:
+            valor_contador=valores_ciudades[ciudad_lista]
+            valor_contador=valor_contador+1
+            valores_ciudades[ciudad_lista]=valor_contador
+    
+            
+    for llave_ciudad in valores_ciudades:
+        valor_ciu=valores_ciudades[llave_ciudad]
+        mp.put(mapa_ciudades,llave_ciudad,valor_ciu)   
+        mp.put(mapa_ciudades_2,llave_ciudad,valor_ciu)
+                    
+            
+    llaves_ciudades=mp.keySet(mapa_ciudades)
+    mayor=0
+    menor=10000
+    for llave_ciudad in lt.iterator(llaves_ciudades):
+        pareja_llave=mp.get(mapa_ciudades,llave_ciudad)
+        cantidad=me.getValue(pareja_llave)
+        ciudad_sacada_mostrar=me.getKey(pareja_llave)
+        if cantidad>mayor:
+            mayor_ciudad_mostrar=ciudad_sacada_mostrar
+            mayor_mostrar=cantidad
+        if cantidad<menor:
+            menor_ciudad=llave_ciudad
+            menor=cantidad
                     
                     
-    lista_ciudades_mas=[]        
+    lista_ciudades_mas=[]     
     
     i=0
     while i<n_ciudades:
@@ -329,32 +344,6 @@ def req_6(data_structs, n_ciudades, expertisia, año):
         
     
     
-    
-    
-    llaves_ciudades=mp.keySet(mapa_ciudades)
-    mayor=0
-    menor=10000
-    for llave_ciudad in lt.iterator(llaves_ciudades):
-        pareja_llave=mp.get(mapa,llave_ciudad)
-        cantidad=me.getValue(pareja_llave)
-        ciudad_sacada_mostrar=me.getKey(pareja_llave)
-        if cantidad>mayor:
-            mayor_ciudad_mostrar=ciudad_sacada_mostrar
-            mayor_mostrar=cantidad
-        if cantidad<menor:
-            menor_ciudad=llave_ciudad
-            menor=cantidad
-    
-        
-
-            
-    
-    
-        
- 
-    
-    
-    
     req_6_list_n_ciudades=lt.newList('ARRAY_LIST')
     
     for trabajo in lt.iterator(req_6_list):
@@ -374,13 +363,21 @@ def req_6(data_structs, n_ciudades, expertisia, año):
 
     total_de_ofertas=lt.size(req_6_list_n_ciudades)
     
-    salario_promedio=None 
     
     
     
-    rta= numciudades
     
-    return rta   
+    print("El total de ciudades que cumplen con las condiciones de la consulta: "+str(numciudades))
+    print("El total de empresas que cumplen con las condiciones de la consulta: "+str(cantidad_de_empresas))
+    print("El total de ofertas publicadas que cumplen con las condiciones de la consulta: "+str(total_de_ofertas))
+    print("Nombre de la ciudad con mayor cantidad de ofertas de empleos: "+str(mayor_ciudad_mostrar)+" y su conteo: "+str(mayor_mostrar))
+    print("Nombre de la ciudad con menor cantidad de ofertas de empleos: "+str(menor_ciudad)+" y su conteo: "+str(menor))
+          
+    
+    
+    
+    
+    return 0
     
     
 

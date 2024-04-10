@@ -151,7 +151,24 @@ def req_3(control,nombre_empresa,fecha_inicial,fecha_final):
     Retorna el resultado del requerimiento 3
     """
     # TODO: Modificar el requerimiento 3
-    return model.req_3(control["model"],nombre_empresa,fecha_inicial,fecha_final)
+    tiempo_inicial = get_time()
+    memoria = True
+    if memoria: 
+        tracemalloc.start()
+        memoria_inicial = get_memory()
+        
+    rta=model.req_3(control["model"],nombre_empresa,fecha_inicial,fecha_final)
+    
+    
+    tiempo_final = get_time()
+    tiempo_total = delta_time(tiempo_inicial, tiempo_final)   
+    if memoria:
+        memoria_final = get_memory()
+        tracemalloc.stop()
+        memoria_total= delta_memory(memoria_final, memoria_inicial)
+        
+    return rta, tiempo_total, memoria_total
+
 
 
 def req_4(control):

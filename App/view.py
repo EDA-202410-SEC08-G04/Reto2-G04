@@ -106,7 +106,7 @@ def print_req_3(control,nombre_empresa,fecha_inicial,fecha_final):
         Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
-    jobs=controller.req_3(control,nombre_empresa,fecha_inicial,fecha_final)
+    jobs,tiempo,memoria=controller.req_3(control,nombre_empresa,fecha_inicial,fecha_final)
     
     
     headers ={"Fecha de publicación": [],
@@ -129,7 +129,7 @@ def print_req_3(control,nombre_empresa,fecha_inicial,fecha_final):
         headers["Tipo de lugar de trabajo de la oferta"].append(job['workplace_type'])
         headers["Disponible a contratar ucranianos"].append(job['open_to_hire_ukrainians'])
         
-    return headers 
+    return headers,tiempo,memoria
 
 
 def print_req_4(control):
@@ -235,8 +235,10 @@ if __name__ == "__main__":
             fecha_inicial=input("Escribe La fecha inicial del periodo a consultar en el formato YYYY-MM-DD: ")
             fecha_final=input("Escribe La fecha final del periodo a consultar en el formato YYYY-MM-DD: ")
             print ("Estas son las N ofertas de trabajo según el nombre de la empresa y la fecha de publicación:" )
-            resultado_req_3=print_req_3(control,nombre_empresa,fecha_inicial,fecha_final)
+            resultado_req_3, tiempo, memoria=print_req_3(control,nombre_empresa,fecha_inicial,fecha_final)
             print(tabulate(resultado_req_3,headers='keys',tablefmt="grid"))
+            print("Tiempo: ", tiempo)
+            print("Memoria: ", memoria)
             
 
 
