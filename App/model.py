@@ -374,10 +374,11 @@ def req_6(data_structs, n_ciudades, expertisia, año):
     print("Nombre de la ciudad con menor cantidad de ofertas de empleos: "+str(menor_ciudad)+" y su conteo: "+str(menor))
           
     
+
     
     
     
-    return 0
+    return req_6_list_n_ciudades
     
     
 
