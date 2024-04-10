@@ -69,11 +69,7 @@ def new_data_structs():
     data_structs['skills'] = lt.newList(datastructure='ARRAY_LIST')
     data_structs['employments_types'] = lt.newList(datastructure='ARRAY_LIST')
     data_structs['multilocations'] = lt.newList(datastructure='ARRAY_LIST')
-    
     data_structs["id_jobs"]= mp.newMap(206563, maptype='PROBING', loadfactor=0.5)
-    data_structs["id_skills"]= mp.newMap(577162, maptype='PROBING', loadfactor=0.5)
-    data_structs["id_employments"]= mp.newMap(259837, maptype='PROBING', loadfactor=0.5)
-    data_structs["id_multilocations"] = mp.newMap(244937, maptype='PROBING', loadfactor=0.5)
     return data_structs
 
 # Funciones para agregar informacion al modelo
@@ -122,27 +118,29 @@ def add_skill(data_structs, skill):
     """
     Función para agregar nuevos elementos a la lista
     """
-    #TODO: Crear la función para agregar elementos a una lista
-    id = skill["id"]
-    mp.put(data_structs["id_skills"], id, skill)
-    
-    
-def add_multilocations(data_structs, multilocations):
-    """
-    Función para agregar nuevos elementos a la lista
-    """
-    #TODO: Crear la función para agregar elementos a una lista
-    id = multilocations["id"]
-    mp.put(data_structs["id_multilocations"], id, multilocations)
 
-def add_employments_types(data_structs,  employments_types):
+    lt.addLast(data_structs['skills'], skill)
+    
+    return data_structs
+    
+    
+def add_multilocations(data_structs, multilocation):
     """
     Función para agregar nuevos elementos a la lista
     """
-    #TODO: Crear la función para agregar elementos a una lista
+
+    lt.addLast(data_structs['multilocations'], multilocation)
     
-    id = employments_types["id"]
-    mp.put(data_structs["id_employments"], id, employments_types)
+    return data_structs
+
+def add_employments_types(data_structs, employments_types):
+    """
+    Función para agregar nuevos elementos a la lista
+    """
+
+    lt.addLast(data_structs['employments_types'], employments_types)
+    
+    return data_structs
 
 
 
@@ -200,6 +198,12 @@ def req_1(data_structs,id_pais, num_ofertas,nivel_experiencia):
         table_element= mp.get(id_jobs, element)
         country_code_element= table_element["value"]["country_code"]
         experience_level=table_element["value"]["experience_level"]
+        ofertas_trabajo_pais=0
+        ofertas_trabajo_condicion=0
+        if country_code_element==id_pais:
+            ofertas_trabajo_pais+=1
+        if experience_level==nivel_experiencia:
+            ofertas_trabajo_condicion+=1
         if country_code_element==id_pais and experience_level==nivel_experiencia:
             lt.addLast(lista_filtro,table_element["value"])
     listed_dates = merg.sort(lista_filtro, criterio)
@@ -208,7 +212,7 @@ def req_1(data_structs,id_pais, num_ofertas,nivel_experiencia):
         job_a_insertar=lt.getElement(listed_dates,j)
         lt.addLast(lista_final,job_a_insertar)
     
-    return lista_final
+    return lista_final, str(ofertas_trabajo_pais), str(ofertas_trabajo_condicion)
         
  
         
@@ -311,28 +315,30 @@ def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
             mp.put(map_company,company_name, contador )
     
     for city in lt.iterator(lista_filtro):
-        city_= city["city"]
-        if mp.contains(map_city, city_)==False:
+        city_act= city["city"]
+        if mp.contains(map_city, city_act)==False:
             contador=1
-            mp.put(map_city, city, contador)
+            mp.put(map_city, city_act, contador)
         else:
             contador+=1
-            mp.put(map_city,company_name, contador )
+            mp.put(map_city,city_act, contador)
 
     
     list_min_max_cities= lt.newList("ARRAY_LIST")
     cities= mp.keySet(map_city)
     for city in lt.iterator(cities):
         pair= mp.get(map_city, city)
-        lt.addLast(list_min_max_cities, [pair])
+        lt.addLast(list_min_max_cities, pair)
         for pair in lt.iterator(list_min_max_cities):
-            value= pair[1]
-            orderer_values= merg.sort(value, criterio_2)
+            value= pair["value"]
+            print(list_min_max_cities)
+            print(type(list_min_max_cities))
+            ordered_values= merg.sort(value, criterio_2)
             
-    max_city=lt.lastElement(orderer_values)
+    max_city=lt.lastElement(ordered_values)
     max_count=max_city[1]
     max_name=max_city[0]
-    min_city= lt.firstElement(orderer_values)
+    min_city= lt.firstElement(ordered_values)
     min_count=min_city[1]
     min_name=min_city[0]
     

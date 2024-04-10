@@ -199,7 +199,7 @@ if __name__ == "__main__":
                 "País de la oferta": [],
                 "Ciudad de la oferta": []}
             for job in tres_p_u: 
-                
+        
                 headers["Fecha de publicación"].append(job['published_at'])
                 headers["Título de la oferta"].append(job['title'])
                 headers["Nombre de la empresa"].append(job['company_name'])
@@ -214,7 +214,9 @@ if __name__ == "__main__":
             id_pais= input("Por favor introdusca el código del país:")
             nivel_experiencia= input("Por favor introdusca el nivel de experiencia:")
             num_ofertas= input("Por favor introdusca la cantidad de ofertas a consultar:")
-            result=controller.req_1(datastructs, id_pais, num_ofertas,nivel_experiencia)
+            lista_final, ofertas_trabajo_pais, ofertas_trabajo_condicion=controller.req_1(datastructs, id_pais, num_ofertas,nivel_experiencia)
+            print("El total 1de ofertas de trabajo ofrecidas según el país:" + ofertas_trabajo_pais)
+            print("El total de ofertas de trabajo ofrecidas según la condición (junior, mid o senior):" + ofertas_trabajo_condicion)
             headers ={"Fecha de publicación": [],
               "Título de la oferta": [],
               "Empresa que publica": [],
@@ -225,7 +227,7 @@ if __name__ == "__main__":
               "Tipo de ubicación de trabajo":[],
               "Disponible a contratar ucranianos":[]
               }
-            for job in lt.iterator(result): 
+            for job in lt.iterator(lista_final): 
                 headers["Fecha de publicación"].append(job['published_at'])
                 headers["Título de la oferta"].append(job['title'])
                 headers["Empresa que publica"].append(job['company_name'])

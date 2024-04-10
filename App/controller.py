@@ -136,8 +136,8 @@ def req_1(control,id_pais, num_ofertas,nivel_experiencia):
     Retorna el resultado del requerimiento 1
     """
     # TODO: Modificar el requerimiento 1
-    result= model.req_1(control,id_pais, num_ofertas,nivel_experiencia)
-    return result
+    lista_final, ofertas_trabajo_pais, ofertas_trabajo_condicion= model.req_1(control,id_pais, num_ofertas,nivel_experiencia)
+    return lista_final, ofertas_trabajo_pais, ofertas_trabajo_condicion
 
 
 
