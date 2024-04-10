@@ -102,12 +102,33 @@ def print_req_2(control, input_empresa, input_ciudad,input_cant_ofertas):
     lista, tiempo_total,memoria_total = controller.req_2(control, input_empresa, input_ciudad,input_cant_ofertas)
     return lista,tiempo_total,memoria_total
 
-def print_req_3(control):
+def print_req_3(control,nombre_empresa,fecha_inicial,fecha_final):
     """
         Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
-    pass
+    jobs,tiempo,memoria=controller.req_3(control,nombre_empresa,fecha_inicial,fecha_final)
+    
+    
+    headers ={"Fecha de publicación": [],
+              "Título de la oferta": [],
+              "Nivel experticia": [],
+              "País de la oferta": [],
+              "Ciudad de la oferta": [],
+              "Tamaño de la empresa de la oferta":[],
+              "Tipo de lugar de trabajo de la oferta":[],
+              "Disponible a contratar ucranianos":[]}
+    for job in lt.iterator(jobs): 
+        headers["Fecha de publicación"].append(job['published_at'])
+        headers["Título de la oferta"].append(job['title'])
+        headers["Nivel experticia"].append(job['experience_level'])
+        headers["País de la oferta"].append(job['country_code'])
+        headers["Ciudad de la oferta"].append(job['city'])
+        headers["Tamaño de la empresa de la oferta"].append(job['company_size'])
+        headers["Tipo de lugar de trabajo de la oferta"].append(job['workplace_type'])
+        headers["Disponible a contratar ucranianos"].append(job['open_to_hire_ukrainians'])
+        
+    return headers,tiempo,memoria
 
 
 def print_req_4(control):
@@ -127,12 +148,38 @@ def print_req_5(control, nom_ciudad, fecha_inicial, fecha_final):
     return tamano_lista_filtrada, cant_total_empresas,  sacar_max_empresa, max_ofertas, sacar_min_empresa, min_ofertas, lista_filtrada
 
 
-def print_req_6(control):
+def print_req_6(control, n_ciudades, expertisia, año):
     """
         Función que imprime la solución del Requerimiento 6 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 6
-    pass
+    jobs,tiempo,memoria=controller.req_6(control, n_ciudades, expertisia, año)
+    
+    
+    headers ={"Fecha de publicación": [],
+              "Título de la oferta": [],
+              "Empresa que publica": [],
+              "Nivel experticia": [],
+              "País de la oferta": [],
+              "Ciudad de la oferta": [],
+              "Tamaño de la empresa de la oferta":[],
+              "Tipo de lugar de trabajo de la oferta":[],
+              "Disponible a contratar ucranianos":[]}
+    
+    for job in lt.iterator(jobs): 
+        headers["Fecha de publicación"].append(job['published_at'])
+        headers["Título de la oferta"].append(job['title'])
+        headers["Empresa que publica"].append(job['company_name'])
+        headers["Nivel experticia"].append(job['experience_level'])
+        headers["País de la oferta"].append(job['country_code'])
+        headers["Ciudad de la oferta"].append(job['city'])
+        headers["Tamaño de la empresa de la oferta"].append(job['company_size'])
+        headers["Tipo de lugar de trabajo de la oferta"].append(job['workplace_type'])
+        headers["Disponible a contratar ucranianos"].append(job['open_to_hire_ukrainians'])
+        
+    return headers,tiempo,memoria
+
+    
 
 
 def print_req_7(control):
@@ -239,7 +286,16 @@ if __name__ == "__main__":
                 #headers["Tipo de trabajo (Remoto :Si  No)"], trabajo
 
         elif int(inputs) == 4:
-            print_req_3(control)
+            nombre_empresa=input("Escribe el nombre de la empresa que quieres consultar: ")
+            fecha_inicial=input("Escribe La fecha inicial del periodo a consultar en el formato YYYY-MM-DD: ")
+            fecha_final=input("Escribe La fecha final del periodo a consultar en el formato YYYY-MM-DD: ")
+            print ("Estas son las N ofertas de trabajo según el nombre de la empresa y la fecha de publicación:" )
+            resultado_req_3, tiempo, memoria=print_req_3(control,nombre_empresa,fecha_inicial,fecha_final)
+            print(tabulate(resultado_req_3,headers='keys',tablefmt="grid"))
+            print("Tiempo: ", tiempo)
+            print("Memoria: ", memoria)
+            
+
 
         elif int(inputs) == 5:
             print_req_4(control)
@@ -252,7 +308,14 @@ if __name__ == "__main__":
             print (tamano_lista_filtrada, cant_total_empresas,  sacar_max_empresa, max_ofertas, sacar_min_empresa, min_ofertas, lista_filtrada)
 
         elif int(inputs) == 7:
-            print_req_6(control)
+            n_ciudades=int(input("Escribe la cantidad de ciudades que quiere consultar: "))
+            expertisia=input("Escriba el nivel de experiencia a consultar(junior, mid, senior, indiferente): ")
+            año=(input("Escribe el año que te gustaria consultar: "))
+            print("Estas son las N ciudades con mayor número de oferta de trabajo segun la experticia seleccionada en el año seleccionado: " )
+            resultado_req_6, tiempo, memoria=print_req_6(control, n_ciudades, expertisia, año)
+            print(tabulate(resultado_req_6, headers='keys',tablefmt="grid"))
+            print("Tiempo: ", tiempo)
+            print("Memoria: ", memoria)
 
         elif int(inputs) == 8:
             print_req_7(control)

@@ -161,12 +161,29 @@ def req_2(control, input_empresa, input_ciudad,input_cant_ofertas):
 #, tiempo_total,memoria_total
 
 
-def req_3(control):
+def req_3(control,nombre_empresa,fecha_inicial,fecha_final):
     """
     Retorna el resultado del requerimiento 3
     """
     # TODO: Modificar el requerimiento 3
-    pass
+    tiempo_inicial = get_time()
+    memoria = True
+    if memoria: 
+        tracemalloc.start()
+        memoria_inicial = get_memory()
+        
+    rta=model.req_3(control["model"],nombre_empresa,fecha_inicial,fecha_final)
+    
+    
+    tiempo_final = get_time()
+    tiempo_total = delta_time(tiempo_inicial, tiempo_final)   
+    if memoria:
+        memoria_final = get_memory()
+        tracemalloc.stop()
+        memoria_total= delta_memory(memoria_final, memoria_inicial)
+        
+    return rta, tiempo_total, memoria_total
+
 
 
 def req_4(control):
@@ -185,13 +202,30 @@ def req_5(control, nom_ciudad, fecha_inicial, fecha_final):
     tamano_lista_filtrada, cant_total_empresas,  sacar_max_empresa, max_ofertas, sacar_min_empresa, min_ofertas, lista_filtrada= model.req_5(control, nom_ciudad, fecha_inicial, fecha_final)
     return tamano_lista_filtrada, cant_total_empresas,  sacar_max_empresa, max_ofertas, sacar_min_empresa, min_ofertas, lista_filtrada
 
-def req_6(control):
+
+def req_6(control, n_ciudades, expertisia, año):
     """
     Retorna el resultado del requerimiento 6
     """
-    # TODO: Modificar el requerimiento 6
-    pass
-
+    # TODO: Modificar el requerimiento 
+    tiempo_inicial = get_time()
+    memoria = True
+    if memoria: 
+        tracemalloc.start()
+        memoria_inicial = get_memory()
+        
+    rta=model.req_6(control["model"], n_ciudades, expertisia, año)
+    
+    
+    tiempo_final = get_time()
+    tiempo_total = delta_time(tiempo_inicial, tiempo_final)   
+    if memoria:
+        memoria_final = get_memory()
+        tracemalloc.stop()
+        memoria_total= delta_memory(memoria_final, memoria_inicial)
+        
+    return rta, tiempo_total, memoria_total
+    
 
 def req_7(control):
     """
