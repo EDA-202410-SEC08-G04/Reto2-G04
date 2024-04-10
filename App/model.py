@@ -311,7 +311,7 @@ def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
     
     for city in lt.iterator(lista_filtro):
         city_= city["city"]
-        if mp.cointains(map_city, city_)==False:
+        if mp.contains(map_city, city_)==False:
             contador=1
             mp.put(map_city, city, contador)
         else:
