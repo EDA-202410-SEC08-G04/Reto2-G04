@@ -500,24 +500,50 @@ def req_7(data_structs, año, experticia):
     Función que soluciona el requerimiento 7
     """
     # TODO: Realizar el requerimiento 7
-    mapa_paises=mp.newMap(numelements=17,
-           prime=109345121,
-           maptype='PROBING',
-           loadfactor=0.5,
-           cmpfunction=None)
-    
+
     mapa= data_structs["id_jobs"]
     año_tiempo=dt.strptime(año, "%Y")
     req_7_list=lt.newList('ARRAY_LIST')
     llaves=mp.keySet(mapa)
+    
     for llave in lt.iterator(llaves):
         pareja=mp.get(mapa,llave)
         trabajo=me.getValue(pareja)
         fecha_y_hora=trabajo["published_at"]
-        fecha_trabajo=dt.strptime(fecha_y_hora, "%Y-%m-%dT%H:%M:%S.%fZ")
+        fecha_y_hora_separados=fecha_y_hora.split("-")
+        fecha_trabajo=dt.strptime(fecha_y_hora_separados[0], "%Y")
         if fecha_trabajo==año_tiempo:
-            if experticia==trabajo["experience_level"]:
+            if experticia==trabajo["experience_level"] or experticia=="indiferente":
                 lt.addLast(req_7_list,trabajo)
+    
+    
+    mapa_pais=mp.newMap(numelements=17,
+           prime=109345121,
+           maptype='PROBING',
+           loadfactor=0.5,
+           cmpfunction=None)
+
+    
+    for element in lt.iterator(req_7_list):
+        pais= element["country_code"]
+        if mp.contains(mapa_pais, pais)==False:
+            contador=1
+            mp.put(mapa_pais, pais, contador)
+        else:
+            contador+=1
+            mp.put(mapa_pais,pais, contador)
+
+    
+    list_min_max_countries= lt.newList("ARRAY_LIST")
+    countries= mp.keySet(mapa_pais)
+    for pais in lt.iterator(countries):
+        pair= mp.get(mapa_pais, pais)
+        lt.addLast(list_min_max_countries, pair)
+    ordered_values= merg.sort(list_min_max_countries, criterio_2)
+    max_country=lt.lastElement(ordered_values)
+    max_count=max_country["value"]
+    max_name=max_country["key"]
+    return req_7_list, max_name, max_count
     pass
 
 

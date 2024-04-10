@@ -209,11 +209,13 @@ def req_6(control, n_ciudades, expertisia, año):
     return model.req_6(control["model"], n_ciudades, expertisia, año)
 
 
-def req_7(control):
+def req_7(control, año, experticia):
     """
     Retorna el resultado del requerimiento 7
     """
     # TODO: Modificar el requerimiento 7
+    req_7_list, max_name, max_count=model.req_7(data_structs, año, experticia)
+    return req_7_list, max_name, max_count
     pass
 
 
