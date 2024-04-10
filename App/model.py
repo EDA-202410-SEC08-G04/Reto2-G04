@@ -222,11 +222,41 @@ def req_1(data_structs,id_pais, num_ofertas,nivel_experiencia):
  
         
 
-def req_2(data_structs):
+def req_2(data_structs, input_empresa, input_ciudad,input_cant_ofertas): 
     """
-    Función que soluciona el requerimiento 2
     """
     # TODO: Realizar el requerimiento 2
+    trabajos = data_structs["id_jobs"]
+    tabla_empresa =  mp.newMap(203563, maptype='CHAINING', loadfactor=0.1)
+    filtro_final = lt.newList('ARRAY_LIST')
+    valores_1 = mp.valueSet(trabajos)
+    tamano_1 = lt.size(valores_1)
+    for i in range(1, tamano_1+1):
+        empresa = lt.getElement(valores_1, i)
+        nom_empresa = empresa["company_name"]
+        nom_inicial = empresa["title"]
+        if mp.contains(tabla_empresa, nom_empresa):
+           lt.addLast(bucket, empresa)
+        else:
+            # Si la llave no está en el mapa, crear un nuevo bucket
+            bucket = lt.newList('ARRAY_LIST')
+            lt.addLast(bucket, empresa)
+
+    mp.put(tabla_empresa, nom_empresa, bucket)
+        
+    tamano_2 = mp.size(tabla_empresa)
+    valor_empresa= mp.get(tabla_empresa,input_empresa)
+    valor3 =valor_empresa['value']['elements']
+    for elemento in valor3:
+        valor_filtro_empresa = elemento['company_name']
+        valor_filtro_ciudad = elemento['city']
+        if valor_filtro_empresa == input_empresa:
+           cont_empresa = +1
+           if valor_filtro_ciudad  == input_ciudad:
+              cont_ciudad = +1
+              lt.addLast(filtro_final, elemento)       
+    tamano_ff = lt.size(filtro_final)
+    return filtro_final
     
 
 
@@ -281,6 +311,22 @@ def req_3(data_structs, nombre_empresa, fecha_inicial, fecha_final):
     return req_3_ordenado
       
 
+def req_4(data_structs):
+    """
+    Función que soluciona el requerimiento 4
+    """
+    # TODO: Realizar el requerimiento 4
+    pass
+def sort_crit_req5(data_1, data_2):
+    
+    if data_1["published_at"] < data_2["published_at"]:
+        return True
+    
+    elif data_1["published_at"]== data_2["published_at"]:
+        if data_1["company_name"] < data_2["company_name"]:
+            return True
+        else: 
+            return False
 def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
     lista_filtro = lt.newList("ARRAY_LIST")
     id_jobs = data_structs["id_jobs"]
@@ -352,12 +398,101 @@ def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
     return lista_filtro , total_offers, total_companies, total_citites, max_count, max_name, min_count, min_name 
         
 
-def req_5(data_structs):
+def req_5(data_structs, nom_ciudad, fecha_inicial, fecha_final):
     """
     Función que soluciona el requerimiento 5
     """
     # TODO: Realizar el requerimiento 5
-    pass
+    trabajos = data_structs["id_jobs"]
+    filtro_ciudad=  mp.newMap(203563, maptype='PROBING', loadfactor=0.5)
+    valores_1 = mp.valueSet(trabajos)
+    tamano_1 = lt.size(valores_1)
+    
+    for i in range(1,tamano_1+1): #On
+        elemento_x = lt.getElement(valores_1, i)
+        ciudad = elemento_x["city"]
+        
+        if not mp.contains(filtro_ciudad, ciudad):
+            lista = lt.newList('ARRAY_LIST')
+            lt.addLast(lista, elemento_x)
+            mp.put(filtro_ciudad, ciudad, lista )
+        
+        else:
+            lista = me.getValue(mp.get(filtro_ciudad, ciudad))   
+            lt.addLast(lista, elemento_x)
+            
+    
+    
+    fecha_i=dt.strptime(fecha_inicial, "%Y-%m-%d")
+    fecha_f=dt.strptime(fecha_final, "%Y-%m-%d")
+    
+    
+    #valores_ciudad = mp.get(filtro_ciudad, nom_ciudad)
+    valores_ciudad = lt.newList('ARRAY_LIST')
+    lista_filtrada = lt.newList('ARRAY_LIST')
+    llaves = mp.keySet(filtro_ciudad)
+
+# Iterar sobre todos los elementos del mapa
+    for i in range(1, mp.size(filtro_ciudad) + 1):    
+       elemento = lt.getElement(llaves, i)
+       if elemento == nom_ciudad:
+            valor = mp.get(filtro_ciudad, elemento)
+            lt.addLast(valores_ciudad, valor)
+            
+    tam_ciudad = lt.size(valores_ciudad)
+    
+    for i in range(0, tam_ciudad): 
+        element = lt.getElement(valores_ciudad,i)
+        fecha = element["published_at"]
+        if fecha["published_at"] <= fecha_final and fecha["published_at"] >= fecha_inicial:
+            lt.addLast(lista_filtrada, fecha) 
+    
+    tamano_lista_filtrada = lt.size(lista_filtrada)
+    
+    # Obtener el total de empresas que publicaron al menos una oferta en la ciudad
+    
+    total_empresas = []
+    empresa_mayor_num ={}
+    empresa_menor_num ={}
+    for i in range(tamano_lista_filtrada):
+        elemento = lt.getElement(lista_filtrada, i)
+        nom_empresa = elemento["company_name"]
+        
+        if nom_empresa not in total_empresas:
+            total_empresas.append(nom_empresa)
+
+    #Empresa con mayor número de ofertas y su conteo
+    
+    for i in range(tamano_lista_filtrada):
+        elemento = lt.getElement(lista_filtrada, i)
+        nom_empresa = elemento["company_name"]
+        if nom_empresa not in empresa_mayor_num:
+            empresa_mayor_num[nom_empresa] = 1
+        else:
+            empresa_mayor_num[nom_empresa] +=1
+                     
+    cant_total_empresas = len(total_empresas)
+    sacar_max_empresa = max(empresa_mayor_num, key=empresa_mayor_num.get)
+    max_ofertas = empresa_mayor_num.get(sacar_max_empresa, 0)
+    
+    #Empresa con menor número de ofertas (al menos una) y su conteo
+    for i in range(tamano_lista_filtrada):
+        elemento = lt.getElement(lista_filtrada, i)
+        nom_empresa = elemento["company_name"]
+        
+        if nom_empresa not in empresa_menor_num:
+            empresa_menor_num[nom_empresa] = 1
+        else:
+            empresa_menor_num[nom_empresa] +=1
+    sacar_min_empresa = min(empresa_mayor_num, key=empresa_menor_num.get)
+    min_ofertas = empresa_menor_num.get(sacar_min_empresa, 0)
+   
+    # Ordenar ofertas cronológicamente por fecha y nombre de la empresa
+   
+    merg.sort(lista_filtrada, sort_crit_req5) #Onlogn
+    return tamano_lista_filtrada, cant_total_empresas,  sacar_max_empresa, max_ofertas, sacar_min_empresa, min_ofertas, lista_filtrada
+ 
+
 
 
 def req_6(data_structs, n_ciudades, expertisia, año):
