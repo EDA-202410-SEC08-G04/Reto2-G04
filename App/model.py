@@ -1,4 +1,4 @@
-"""data_size(data_structs)
+﻿"""data_size(data_structs)
  * Copyright 2020, Departamento de sistemas y Computación,
  * Universidad de Los Andes
  *
@@ -108,8 +108,11 @@ def criterio(data_1, data_2):
     else:
         return False  
     
+    value= pair["value"]
 def criterio_2(data_1, data_2):
-    if data_1 > data_2:
+    valor_1= data_1["value"]
+    valor_2= data_2["value"]
+    if valor_1 > valor_2:
         return True
     else:
        return False
@@ -315,13 +318,8 @@ def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
             mp.put(map_company,company_name, contador )
     
     for city in lt.iterator(lista_filtro):
-<<<<<<< HEAD
-        city_act= city["city"]
-        if mp.contains(map_city, city_)==False:
-=======
         city_act= city["city"]
         if mp.contains(map_city, city_act)==False:
->>>>>>> 9973ff101dfc49745d75a04207fc1dee353d8dca
             contador=1
             mp.put(map_city, city_act, contador)
         else:
@@ -334,18 +332,13 @@ def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
     for city in lt.iterator(cities):
         pair= mp.get(map_city, city)
         lt.addLast(list_min_max_cities, pair)
-        for pair in lt.iterator(list_min_max_cities):
-            value= pair["value"]
-            print(list_min_max_cities)
-            print(type(list_min_max_cities))
-            ordered_values= merg.sort(value, criterio_2)
-            
+    ordered_values= merg.sort(list_min_max_cities, criterio_2)
     max_city=lt.lastElement(ordered_values)
-    max_count=max_city[1]
-    max_name=max_city[0]
+    max_count=max_city["value"]
+    max_name=max_city["key"]
     min_city= lt.firstElement(ordered_values)
-    min_count=min_city[1]
-    min_name=min_city[0]
+    min_count=min_city["value"]
+    min_name=min_city["key"]
     
     total_offers= lt.size(lista_filtro)
     total_companies= mp.size(map_company)
@@ -505,6 +498,12 @@ def req_7(data_structs):
     Función que soluciona el requerimiento 7
     """
     # TODO: Realizar el requerimiento 7
+    mapa_paises=mp.newMap(numelements=17,
+           prime=109345121,
+           maptype='PROBING',
+           loadfactor=0.5,
+           cmpfunction=None)
+    
     pass
 
 
