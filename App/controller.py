@@ -130,12 +130,29 @@ def get_data(control, id):
     pass
 
 
-def req_1(control):
+def req_1(control,id_pais, num_ofertas,nivel_experiencia):
+     # TODO: Modificar el requerimiento 1
     """
     Retorna el resultado del requerimiento 1
     """
-    # TODO: Modificar el requerimiento 1
-    pass
+    tiempo_inicial = get_time()
+    memoria = True
+    if memoria: 
+        tracemalloc.start()
+        memoria_inicial = get_memory()
+        
+    lista_final, ofertas_trabajo_pais, ofertas_trabajo_condicion= model.req_1(control,id_pais, num_ofertas,nivel_experiencia)
+    
+    tiempo_final = get_time()
+    tiempo_total = delta_time(tiempo_inicial, tiempo_final)   
+    if memoria:
+        memoria_final = get_memory()
+        tracemalloc.stop()
+        memoria_total= delta_memory(memoria_final, memoria_inicial)
+   
+    
+    return lista_final, ofertas_trabajo_pais, ofertas_trabajo_condicion, tiempo_total, memoria_total
+
 
 
 def req_2(control, input_empresa, input_ciudad,input_cant_ofertas):
@@ -186,12 +203,27 @@ def req_3(control,nombre_empresa,fecha_inicial,fecha_final):
 
 
 
-def req_4(control):
+def req_4(control,id_pais, fecha_inicial, fecha_final):
     """
     Retorna el resultado del requerimiento 4
     """
     # TODO: Modificar el requerimiento 4
-    pass
+    tiempo_inicial = get_time()
+    memoria = True
+    if memoria: 
+        tracemalloc.start()
+        memoria_inicial = get_memory()
+        
+    lista_filtro, total_offers, total_companies, total_citites, max_count, max_name, min_count, min_name=model.req_4(control,id_pais, fecha_inicial, fecha_final)    
+    tiempo_final = get_time()
+    tiempo_total = delta_time(tiempo_inicial, tiempo_final)   
+    if memoria:
+        memoria_final = get_memory()
+        tracemalloc.stop()
+        memoria_total= delta_memory(memoria_final, memoria_inicial)
+    
+
+    return lista_filtro, total_offers, total_companies, total_citites, max_count, max_name, min_count, min_name, tiempo_total, memoria_total
 
 
 def req_5(control, nom_ciudad, fecha_inicial, fecha_final):
@@ -227,11 +259,13 @@ def req_6(control, n_ciudades, expertisia, año):
     return rta, tiempo_total, memoria_total
     
 
-def req_7(control):
+def req_7(control, año, experticia):
     """
     Retorna el resultado del requerimiento 7
     """
     # TODO: Modificar el requerimiento 7
+    req_7_list, max_name, max_count=model.req_7(data_structs, año, experticia)
+    return req_7_list, max_name, max_count
     pass
 
 

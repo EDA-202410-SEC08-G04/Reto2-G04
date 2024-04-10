@@ -74,7 +74,6 @@ def load_data(control, tamaño_archivo):
     #return data, tiempo, memoria
     
     controller.load_data(control, (tamaño_archivo + '-jobs.csv'), (tamaño_archivo + '-skills.csv'), (tamaño_archivo + '-employments_types.csv'), (tamaño_archivo + '-multilocations.csv'))
-    
     #return data,jobsfile
 
 
@@ -83,13 +82,6 @@ def print_data(control, id):
         Función que imprime un dato dado su ID
     """
     #TODO: Realizar la función para imprimir un elemento
-    pass
-
-def print_req_1(control):
-    """
-        Función que imprime la solución del Requerimiento 1 en consola
-    """
-    # TODO: Imprimir el resultado del requerimiento 1
     pass
 
 
@@ -130,13 +122,6 @@ def print_req_3(control,nombre_empresa,fecha_inicial,fecha_final):
         
     return headers,tiempo,memoria
 
-
-def print_req_4(control):
-    """
-        Función que imprime la solución del Requerimiento 4 en consola
-    """
-    # TODO: Imprimir el resultado del requerimiento 4
-    pass
 
 
 def print_req_5(control, nom_ciudad, fecha_inicial, fecha_final):
@@ -240,18 +225,47 @@ if __name__ == "__main__":
                 "País de la oferta": [],
                 "Ciudad de la oferta": []}
             for job in tres_p_u: 
+        
                 headers["Fecha de publicación"].append(job['published_at'])
                 headers["Título de la oferta"].append(job['title'])
                 headers["Nombre de la empresa"].append(job['company_name'])
                 headers["Nivel de experticia de la oferta"].append(job['experience_level'])
                 headers["País de la oferta"].append(job['country_code'])
                 headers["Ciudad de la oferta"].append(job['city'])
-            print(tabulate(headers, headers='keys'))
+            print(tabulate(headers, headers='keys', tablefmt="simple_grid"))
             #print ("memoria total: ", memoria)
             #print ("tiempo total: ", tiempo)
             
         elif int(inputs) == 2:
-            print_req_1(control)
+            id_pais= input("Por favor introdusca el código del país:")
+            nivel_experiencia= input("Por favor introdusca el nivel de experiencia:")
+            num_ofertas= input("Por favor introdusca la cantidad de ofertas a consultar:")
+            lista_final, ofertas_trabajo_pais, ofertas_trabajo_condicion, tiempo_total, memoria_total=controller.req_1(datastructs, id_pais, num_ofertas,nivel_experiencia)
+            print('Tiempo total:' + str(tiempo_total) )
+            print('Memoria total:' + str(memoria_total) )
+            print("El total 1de ofertas de trabajo ofrecidas según el país:" + ofertas_trabajo_pais)
+            print("El total de ofertas de trabajo ofrecidas según la condición (junior, mid o senior):" + ofertas_trabajo_condicion)
+            headers ={"Fecha de publicación": [],
+              "Título de la oferta": [],
+              "Empresa que publica": [],
+              "Nivel experticia": [],
+              "País de la oferta": [],
+              "Ciudad de la oferta": [],
+              "Tamanio de la empresa de la oferta":[],
+              "Tipo de ubicación de trabajo":[],
+              "Disponible a contratar ucranianos":[]
+              }
+            for job in lt.iterator(lista_final): 
+                headers["Fecha de publicación"].append(job['published_at'])
+                headers["Título de la oferta"].append(job['title'])
+                headers["Empresa que publica"].append(job['company_name'])
+                headers["Nivel experticia"].append(job['experience_level'])
+                headers["País de la oferta"].append(job['country_code'])
+                headers["Ciudad de la oferta"].append(job['city'])
+                headers["Tamanio de la empresa de la oferta"].append(job['company_size'])
+                headers["Tipo de ubicación de trabajo"].append(job['workplace_type'])
+                headers["Disponible a contratar ucranianos"].append(job['open_to_hire_ukrainians'])
+            print(tabulate(headers, headers='keys', tablefmt="simple_grid"))
 
         elif int(inputs) == 3:
             input_cant_ofertas = input("Ingrese la cantidad de ofertas a listar: ")
@@ -298,8 +312,38 @@ if __name__ == "__main__":
 
 
         elif int(inputs) == 5:
-            print_req_4(control)
-
+            id_pais= input("Por favor introdusca el código del país:")
+            fecha_inicial= input("Por favor introdusca una fecha inicial para el periodo de consulta:")
+            fecha_final= input("Por favor introdusca una fecha final para el periodo de consulta:")
+            lista_filtro, total_offers, total_companies, total_citites, max_count, max_name, min_count, min_name, tiempo_total, memoria_total=controller.req_4(datastructs, id_pais, fecha_inicial, fecha_final)
+            print('Tiempo total:' + str(tiempo_total) )
+            print('Memoria total:' + str(memoria_total) )
+            print("El total de ofertas en el país en el periodo de consulta es:", total_offers)
+            print("El total de empresas que publicaron al menos una oferta en el país de consulta es:", total_companies)
+            print("EL número total de ciudades del país de consulta en las que se publicaron ofertas es:", total_citites)
+            print("Ciudad del país de consulta con mayor número de ofertas y su conteo:", max_name + ":" + str(max_count))
+            print("Ciudad del país de consulta con menor número de ofertas (al menos una) y su conteo:", min_name + ":" + str(min_count))
+            
+            headers ={"Fecha de publicación": [],
+              "Título de la oferta": [],
+              "Empresa que publica": [],
+              "Nivel experticia": [],
+              "País de la oferta": [],
+              "Ciudad de la oferta": [],
+              "Tipo de lugar de trabajo de la oferta":[],
+              "Disponible a contratar ucranianos":[]
+              }
+            for job in lt.iterator(lista_filtro): 
+                headers["Fecha de publicación"].append(job['published_at'])
+                headers["Título de la oferta"].append(job['title'])
+                headers["Empresa que publica"].append(job['company_name'])
+                headers["Nivel experticia"].append(job['experience_level'])
+                headers["País de la oferta"].append(job['country_code'])
+                headers["Ciudad de la oferta"].append(job['city'])
+                headers["Tipo de lugar de trabajo de la oferta"].append(job['workplace_type'])
+                headers["Disponible a contratar ucranianos"].append(job['open_to_hire_ukrainians'])
+            print(tabulate(headers, headers='keys', tablefmt="simple_grid"))
+                                    
         elif int(inputs) == 6:
             nom_ciudad = input("Ingrese el nombre de la ciudad que quiere consultar: ")
             fecha_inicial=input("Escribe La fecha inicial del periodo a consultar en el formato (YYYY-MM-DD): ")
@@ -312,10 +356,8 @@ if __name__ == "__main__":
             expertisia=input("Escriba el nivel de experiencia a consultar(junior, mid, senior, indiferente): ")
             año=(input("Escribe el año que te gustaria consultar: "))
             print("Estas son las N ciudades con mayor número de oferta de trabajo segun la experticia seleccionada en el año seleccionado: " )
-            resultado_req_6, tiempo, memoria=print_req_6(control, n_ciudades, expertisia, año)
-            print(tabulate(resultado_req_6, headers='keys',tablefmt="grid"))
-            print("Tiempo: ", tiempo)
-            print("Memoria: ", memoria)
+            resultado_req_6=print_req_6(control,n_ciudades, expertisia, año)
+            print(resultado_req_6)
 
         elif int(inputs) == 8:
             print_req_7(control)

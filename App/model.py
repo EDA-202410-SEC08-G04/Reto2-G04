@@ -69,11 +69,7 @@ def new_data_structs():
     data_structs['skills'] = lt.newList(datastructure='ARRAY_LIST')
     data_structs['employments_types'] = lt.newList(datastructure='ARRAY_LIST')
     data_structs['multilocations'] = lt.newList(datastructure='ARRAY_LIST')
-    
     data_structs["id_jobs"]= mp.newMap(206563, maptype='PROBING', loadfactor=0.5)
-    data_structs["id_skills"]= mp.newMap(577162, maptype='PROBING', loadfactor=0.5)
-    data_structs["id_employments"]= mp.newMap(259837, maptype='PROBING', loadfactor=0.5)
-    data_structs["id_multilocations"] = mp.newMap(244937, maptype='PROBING', loadfactor=0.5)
     return data_structs
 
 # Funciones para agregar informacion al modelo
@@ -87,7 +83,9 @@ def add_job(data_structs, job):
     mp.put(data_structs["id_jobs"], id, job)
     
 # Funciones ordenamiento carga de datos de ofertas
-    
+
+
+
 def carga_lista_fechas(data_structs, job):
     fecha = job["published_at"]
     #lt.addLast(data_structs['jobs'], fecha)
@@ -97,8 +95,26 @@ def ofertas_ordenadas(lista_jobs):
     fechas_ordenadas = merg.sort(lista_jobs, criterio)
     return fechas_ordenadas 
 
+   
 def criterio(data_1, data_2):
-    if data_1["published_at"] > data_2["published_at"]:
+ 
+    date_str1 = data_1["published_at"]
+    date_str2 = data_2["published_at"]
+    format = "%Y-%m-%dT%H:%M:%S.%fZ"
+    
+    date1 = dt.strptime(date_str1, format)
+    date2 = dt.strptime(date_str2, format)
+    
+    if date1 > date2:
+        return True
+    else:
+        return False  
+    
+    value= pair["value"]
+def criterio_2(data_1, data_2):
+    valor_1= data_1["value"]
+    valor_2= data_2["value"]
+    if valor_1 > valor_2:
         return True
     else:
        return False
@@ -107,27 +123,29 @@ def add_skill(data_structs, skill):
     """
     Función para agregar nuevos elementos a la lista
     """
-    #TODO: Crear la función para agregar elementos a una lista
-    id = skill["id"]
-    mp.put(data_structs["id_skills"], id, skill)
-    
-    
-def add_multilocations(data_structs, multilocations):
-    """
-    Función para agregar nuevos elementos a la lista
-    """
-    #TODO: Crear la función para agregar elementos a una lista
-    id = multilocations["id"]
-    mp.put(data_structs["id_multilocations"], id, multilocations)
 
-def add_employments_types(data_structs,  employments_types):
+    lt.addLast(data_structs['skills'], skill)
+    
+    return data_structs
+    
+    
+def add_multilocations(data_structs, multilocation):
     """
     Función para agregar nuevos elementos a la lista
     """
-    #TODO: Crear la función para agregar elementos a una lista
+
+    lt.addLast(data_structs['multilocations'], multilocation)
     
-    id = employments_types["id"]
-    mp.put(data_structs["id_employments"], id, employments_types)
+    return data_structs
+
+def add_employments_types(data_structs, employments_types):
+    """
+    Función para agregar nuevos elementos a la lista
+    """
+
+    lt.addLast(data_structs['employments_types'], employments_types)
+    
+    return data_structs
 
 
 
@@ -160,14 +178,49 @@ def data_size(data_structs):
     jobsListSize= mp.size(data_structs["id_jobs"])
     return jobsListSize
     
+def add_job(data_structs, job):
+    """
+    Función para agregar nuevos elementos a la lista
+    """
+    #TODO: Crear la función para agregar elementos a una lista
+    id = job["id"]
+    mp.put(data_structs["id_jobs"], id, job)
+    
 
-def req_1(data_structs):
+
+def req_1(data_structs,id_pais, num_ofertas,nivel_experiencia):
+    
     """
     Función que soluciona el requerimiento 1
     """
     # TODO: Realizar el requerimiento 1
-    pass
+    lista_filtro=lt.newList("ARRAY_LIST")
+    id_jobs=data_structs["id_jobs"]
+    keys= mp.keySet(id_jobs)
+    size_keys= lt.size(keys)
+    ofertas_trabajo_pais=0
+    ofertas_trabajo_condicion=0
+    for i in range(0, size_keys+1):
+        element= lt.getElement(keys, i)
+        table_element= mp.get(id_jobs, element)
+        country_code_element= table_element["value"]["country_code"]
+        experience_level=table_element["value"]["experience_level"]
+        if country_code_element==id_pais:
+            ofertas_trabajo_pais+=1
+        if experience_level==nivel_experiencia:
+            ofertas_trabajo_condicion+=1
+        if country_code_element==id_pais and experience_level==nivel_experiencia:
+            lt.addLast(lista_filtro,table_element["value"])
+    listed_dates = merg.sort(lista_filtro, criterio)
+    lista_final=lt.newList("ARRAY_LIST")
+    for j in range(1,int(num_ofertas)+1):
+        job_a_insertar=lt.getElement(listed_dates,j)
+        lt.addLast(lista_final,job_a_insertar)
 
+    return lista_final, str(ofertas_trabajo_pais), str(ofertas_trabajo_condicion)
+        
+ 
+        
 
 def req_2(data_structs, input_empresa, input_ciudad,input_cant_ofertas): 
     """
@@ -204,6 +257,7 @@ def req_2(data_structs, input_empresa, input_ciudad,input_cant_ofertas):
               lt.addLast(filtro_final, elemento)       
     tamano_ff = lt.size(filtro_final)
     return filtro_final
+    
 
 
 def comparar_fechas_pais_req_3(trabajo_1,trabajo_2):
@@ -273,6 +327,76 @@ def sort_crit_req5(data_1, data_2):
             return True
         else: 
             return False
+def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
+    lista_filtro = lt.newList("ARRAY_LIST")
+    id_jobs = data_structs["id_jobs"]
+    keys = mp.keySet(id_jobs)
+    size_keys = lt.size(keys)
+    for i in range(1, size_keys + 1):  
+        element = lt.getElement(keys, i)
+        table_element = mp.get(id_jobs, element)
+        country_code_element = table_element["value"]["country_code"]
+        date = table_element["value"]["published_at"]
+        date_stripped = dt.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ")
+        stripped_datetime_fecha_inicial= dt.strptime(fecha_inicial, "%Y-%m-%d")
+        stripped_datetime_fecha_final= dt.strptime(fecha_final, "%Y-%m-%d")
+
+        if country_code_element == id_pais and stripped_datetime_fecha_inicial <= date_stripped <= stripped_datetime_fecha_final:
+            lt.addLast(lista_filtro, table_element["value"])
+            
+    map_company=mp.newMap(numelements=17,
+           prime=109345121,
+           maptype='PROBING',
+           loadfactor=0.5,
+           cmpfunction=None)
+    
+    map_city=mp.newMap(numelements=17,
+           prime=109345121,
+           maptype='PROBING',
+           loadfactor=0.5,
+           cmpfunction=None)
+            
+    
+    for offer in lt.iterator(lista_filtro):
+        company_name= offer["company_name"]
+        if mp.contains(map_company,company_name)==False:
+            contador=1
+            mp.put(map_company, company_name, contador)
+        else:
+            contador+=1
+            mp.put(map_company,company_name, contador )
+    
+    for city in lt.iterator(lista_filtro):
+        city_act= city["city"]
+        if mp.contains(map_city, city_act)==False:
+            contador=1
+            mp.put(map_city, city_act, contador)
+        else:
+            contador+=1
+            mp.put(map_city,city_act, contador)
+
+    
+    list_min_max_cities= lt.newList("ARRAY_LIST")
+    cities= mp.keySet(map_city)
+    for city in lt.iterator(cities):
+        pair= mp.get(map_city, city)
+        lt.addLast(list_min_max_cities, pair)
+    ordered_values= merg.sort(list_min_max_cities, criterio_2)
+    max_city=lt.lastElement(ordered_values)
+    max_count=max_city["value"]
+    max_name=max_city["key"]
+    min_city= lt.firstElement(ordered_values)
+    min_count=min_city["value"]
+    min_name=min_city["key"]
+    
+    total_offers= lt.size(lista_filtro)
+    total_companies= mp.size(map_company)
+    total_citites= mp.size(map_city)
+    
+    
+    
+    return lista_filtro , total_offers, total_companies, total_citites, max_count, max_name, min_count, min_name 
+        
 
 def req_5(data_structs, nom_ciudad, fecha_inicial, fecha_final):
     """
@@ -510,11 +634,55 @@ def req_6(data_structs, n_ciudades, expertisia, año):
     
 
 
-def req_7(data_structs):
+def req_7(data_structs, año, experticia):
     """
     Función que soluciona el requerimiento 7
     """
     # TODO: Realizar el requerimiento 7
+
+    mapa= data_structs["id_jobs"]
+    año_tiempo=dt.strptime(año, "%Y")
+    req_7_list=lt.newList('ARRAY_LIST')
+    llaves=mp.keySet(mapa)
+    
+    for llave in lt.iterator(llaves):
+        pareja=mp.get(mapa,llave)
+        trabajo=me.getValue(pareja)
+        fecha_y_hora=trabajo["published_at"]
+        fecha_y_hora_separados=fecha_y_hora.split("-")
+        fecha_trabajo=dt.strptime(fecha_y_hora_separados[0], "%Y")
+        if fecha_trabajo==año_tiempo:
+            if experticia==trabajo["experience_level"] or experticia=="indiferente":
+                lt.addLast(req_7_list,trabajo)
+    
+    
+    mapa_pais=mp.newMap(numelements=17,
+           prime=109345121,
+           maptype='PROBING',
+           loadfactor=0.5,
+           cmpfunction=None)
+
+    
+    for element in lt.iterator(req_7_list):
+        pais= element["country_code"]
+        if mp.contains(mapa_pais, pais)==False:
+            contador=1
+            mp.put(mapa_pais, pais, contador)
+        else:
+            contador+=1
+            mp.put(mapa_pais,pais, contador)
+
+    
+    list_min_max_countries= lt.newList("ARRAY_LIST")
+    countries= mp.keySet(mapa_pais)
+    for pais in lt.iterator(countries):
+        pair= mp.get(mapa_pais, pais)
+        lt.addLast(list_min_max_countries, pair)
+    ordered_values= merg.sort(list_min_max_countries, criterio_2)
+    max_country=lt.lastElement(ordered_values)
+    max_count=max_country["value"]
+    max_name=max_country["key"]
+    return req_7_list, max_name, max_count
     pass
 
 
