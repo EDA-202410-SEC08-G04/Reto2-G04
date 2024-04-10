@@ -69,11 +69,7 @@ def new_data_structs():
     data_structs['skills'] = lt.newList(datastructure='ARRAY_LIST')
     data_structs['employments_types'] = lt.newList(datastructure='ARRAY_LIST')
     data_structs['multilocations'] = lt.newList(datastructure='ARRAY_LIST')
-    
     data_structs["id_jobs"]= mp.newMap(206563, maptype='PROBING', loadfactor=0.5)
-    data_structs["id_skills"]= mp.newMap(577162, maptype='PROBING', loadfactor=0.5)
-    data_structs["id_employments"]= mp.newMap(259837, maptype='PROBING', loadfactor=0.5)
-    data_structs["id_multilocations"] = mp.newMap(244937, maptype='PROBING', loadfactor=0.5)
     return data_structs
 
 # Funciones para agregar informacion al modelo
@@ -320,7 +316,7 @@ def req_4(data_structs, id_pais, fecha_inicial, fecha_final):
     
     for city in lt.iterator(lista_filtro):
 <<<<<<< HEAD
-        city_= city["city"]
+        city_act= city["city"]
         if mp.contains(map_city, city_)==False:
 =======
         city_act= city["city"]
