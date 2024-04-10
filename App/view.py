@@ -93,13 +93,14 @@ def print_req_1(control):
     pass
 
 
-def print_req_2(control):
+def print_req_2(control, input_empresa, input_ciudad,input_cant_ofertas):
     """
         Función que imprime la solución del Requerimiento 2 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 2
-    pass
-
+    
+    lista, tiempo_total,memoria_total = controller.req_2(control, input_empresa, input_ciudad,input_cant_ofertas)
+    return lista,tiempo_total,memoria_total
 
 def print_req_3(control):
     """
@@ -117,12 +118,13 @@ def print_req_4(control):
     pass
 
 
-def print_req_5(control):
+def print_req_5(control, nom_ciudad, fecha_inicial, fecha_final):
     """
         Función que imprime la solución del Requerimiento 5 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 5
-    pass
+    tamano_lista_filtrada, cant_total_empresas,  sacar_max_empresa, max_ofertas, sacar_min_empresa, min_ofertas, lista_filtrada = controller.req_5(control, nom_ciudad, fecha_inicial, fecha_final)
+    return tamano_lista_filtrada, cant_total_empresas,  sacar_max_empresa, max_ofertas, sacar_min_empresa, min_ofertas, lista_filtrada
 
 
 def print_req_6(control):
@@ -205,7 +207,36 @@ if __name__ == "__main__":
             print_req_1(control)
 
         elif int(inputs) == 3:
-            print_req_2(control)
+            input_cant_ofertas = input("Ingrese la cantidad de ofertas a listar: ")
+            input_empresa = input("Ingrese la empresa a consultar: ")
+            input_ciudad = input("Ingrese la ciudad a consultar: ")
+            #lista,tiempo_total,memoria_total = print_req_2(control["model"], input_empresa, input_ciudad,input_cant_ofertas)
+            lista = print_req_2(control["model"], input_empresa, input_ciudad,input_cant_ofertas)
+            
+            print("INICIO IMPRESION FINAL: ", lista, "FIN IMPRESION")
+            #print ("Tiempo Total:", tiempo_total)
+            #print ("Meroria Total:",memoria_total)
+            headers ={"Fecha de publicación": [],
+                "Pais": [],
+                "Ciudad de la Oferta": [],
+                "Nombre de la Empresa de la oferta": [],
+                "Titulo de la Oferta": [],
+                "Nivel de Experiencia de la oferta": [],
+                "Formato de aplicacion de la Oferta": [],
+                "Tipo de trabajo (Remoto :Si  No)": []}
+            #for job in lista: 
+             
+             #   headers["Pais:"].append(job['country_code'])
+              # headers["Nombre de la Empresa de la oferta"].append(job['company_name'])
+               # headers["Titulo de la Oferta"].append(job['title'])
+                #headers["Nivel de experticia de la oferta"].append(job['experience_level'])
+                #headers["Formato de aplicacion de la Oferta"].append(job['country_code'])
+                #tipo_trabajo =job.append(job['work_place_type']) 
+                #trabajo = "N"
+                #if tipo_trabajo == "remote":
+                 #  trabajo= "S"
+                   
+                #headers["Tipo de trabajo (Remoto :Si  No)"], trabajo
 
         elif int(inputs) == 4:
             print_req_3(control)
@@ -214,7 +245,11 @@ if __name__ == "__main__":
             print_req_4(control)
 
         elif int(inputs) == 6:
-            print_req_5(control)
+            nom_ciudad = input("Ingrese el nombre de la ciudad que quiere consultar: ")
+            fecha_inicial=input("Escribe La fecha inicial del periodo a consultar en el formato (YYYY-MM-DD): ")
+            fecha_final=input("Escribe La fecha final del periodo a consultar en el formato (YYYY-MM-DD): ")
+            tamano_lista_filtrada, cant_total_empresas,  sacar_max_empresa, max_ofertas, sacar_min_empresa, min_ofertas, lista_filtrada = print_req_5((control["model"]), nom_ciudad, fecha_inicial, fecha_final)
+            print (tamano_lista_filtrada, cant_total_empresas,  sacar_max_empresa, max_ofertas, sacar_min_empresa, min_ofertas, lista_filtrada)
 
         elif int(inputs) == 7:
             print_req_6(control)

@@ -51,7 +51,7 @@ def load_jobs(control, filename_jobs):
     for job in input_filejob:
         model.add_job(control['model'],job)
         model.carga_lista_fechas(control['model'], job)
-   
+      
     return control
 # Funcion cantidad ofertas publicadas de la carga de datos
 def cantidad_ofertas(datastructs):
@@ -138,12 +138,27 @@ def req_1(control):
     pass
 
 
-def req_2(control):
+def req_2(control, input_empresa, input_ciudad,input_cant_ofertas):
     """
     Retorna el resultado del requerimiento 2
     """
     # TODO: Modificar el requerimiento 2
-    pass
+    tiempo_inicial = get_time()
+    memoria = True
+    if memoria: 
+        tracemalloc.start()
+        memoria_inicial = get_memory()
+   
+    lista = model.req_2(control, input_empresa, input_ciudad,input_cant_ofertas)
+    tiempo_final = get_time()
+    tiempo_total = delta_time(tiempo_inicial, tiempo_final)   
+    if memoria:
+        memoria_final = get_memory()
+        tracemalloc.stop()
+        memoria_total= delta_memory(memoria_final, memoria_inicial)
+    
+    return lista
+#, tiempo_total,memoria_total
 
 
 def req_3(control):
@@ -162,12 +177,13 @@ def req_4(control):
     pass
 
 
-def req_5(control):
+def req_5(control, nom_ciudad, fecha_inicial, fecha_final):
     """
     Retorna el resultado del requerimiento 5
     """
     # TODO: Modificar el requerimiento 5
-    pass
+    tamano_lista_filtrada, cant_total_empresas,  sacar_max_empresa, max_ofertas, sacar_min_empresa, min_ofertas, lista_filtrada= model.req_5(control, nom_ciudad, fecha_inicial, fecha_final)
+    return tamano_lista_filtrada, cant_total_empresas,  sacar_max_empresa, max_ofertas, sacar_min_empresa, min_ofertas, lista_filtrada
 
 def req_6(control):
     """
